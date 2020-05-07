@@ -18,7 +18,7 @@
                 <div class="write">
                     <el-button size="small" type="primary" icon="el-icon-edit-outline">写文章</el-button>
                 </div>
-                <div class="info">
+                <div class="info"  @click="goInfo" >
                     <el-avatar size="medium" type="primary" :src="avatarUrl?avatarUrl:require('@/static/img/avatar_male.png')"></el-avatar>
                 </div>
             </div>
@@ -43,6 +43,14 @@ export default {
                 }
             ],
             avatarUrl:""
+        }
+    },
+    methods:{
+        /**
+         * @description:如果未登录去登陆。
+         */
+        goInfo(){
+            this.$router.push("/login")
         }
     }
 }

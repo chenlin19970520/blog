@@ -1,16 +1,17 @@
 <template>
   <div id="app">
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
-<style>
-html,body{
+<style lang="less" scoped>
+html,
+body {
   width: 100%;
   height: 100%;
   padding: 0;
   margin: 0;
-  background-color: rgba(244,245,245,1);
+  background-color: rgba(244, 245, 245, 1);
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -18,9 +19,31 @@ html,body{
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  /deep/ .el-loading-spinner {
+    top: 0;
+    margin-top: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .circular {
+      width: 32px;
+      height: 32px;
+      .path{
+        stroke:rgba(9, 143, 167);
+      }
+    }
+  }
 }
 
-img{
+.color-list {
+  color: #f56c6c;
+  color: #67c23a;
+  color: #e6a23c;
+  color: #909399;
+  color: #409eff;
+}
+img {
   display: block;
 }
 #nav {
