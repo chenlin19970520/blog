@@ -70,7 +70,12 @@
         </div>
 
         <div class="input-line">
-          <el-button class="login-btn mt-2" v-loading="loginLoading" type="primary">登录</el-button>
+          <el-button
+            class="login-btn mt-2"
+            v-loading="loginLoading"
+            @click="login"
+            type="primary"
+          >登录</el-button>
         </div>
         <div class="input-line">
           <el-button
@@ -163,6 +168,7 @@
               <el-date-picker
                 v-model="registerInfo.birthday"
                 placeholder="请选择出生日期"
+                value-format="yyyy-MM-dd"
                 clearable
                 @focus="addRegisterClass('birthday')"
                 @blur="addRegisterClass('birthday')"
@@ -213,12 +219,8 @@
                   :on-success="handleAvatarSuccessAvatar"
                   :before-upload="beforeAvatarUploadAvatar"
                 >
-                  <img
-                    v-if="registerInfo.avatar"
-                    :src="'/'+registerInfo.avatar"
-                    alt
-                  />
-                  <img v-else src="@/static/img/avatar_famale.png" alt="">
+                  <img v-if="registerInfo.avatar" :src="'/'+registerInfo.avatar" alt />
+                  <img v-else src="@/static/img/avatar_famale.png" alt />
                   <div class="text">点击上传用户头像</div>
                 </el-upload>
               </div>
@@ -289,10 +291,14 @@
         <div class="mt-2"></div>
         <div class="input-line flex-row flex-center">
           <div class="register-btn">
-            <el-button class="login-btn">保存信息并注册</el-button>
+            <el-button class="login-btn" @click="register" v-loading="registerLoading">保存信息并注册</el-button>
           </div>
           <div class="register-btn">
-            <el-button class="login-btn" @click="isLogin=true,isRegister=false">已有账号？去登录</el-button>
+            <el-button
+              class="login-btn"
+              v-loading="registerLoading"
+              @click="isLogin=true,isRegister=false"
+            >已有账号？去登录</el-button>
           </div>
         </div>
       </div>
@@ -301,6 +307,7 @@
 </template>
 
 <script>
+import md5 from "md5"
 export default {
   components: {},
   data() {
@@ -327,19 +334,21 @@ export default {
       sexList: [
         {
           name: "男",
-          key: "male"
+          key: "MALE"
         },
         {
           name: "女",
-          key: "female"
+          key: "FEMALE"
         }
       ],
       loginInfo: {
-        username: ""
+        username: "",
+        password:""
       }, //登录信息
       isLogin: true, //是否是登录
       isRegister: false, //是否是注册
       loginLoading: false, //登录loading
+      registerLoading: false, //注册loading
       tabActive: "password", //登录方式
       className: "", //input框选中
       registerClassName: "" //注册框
@@ -379,29 +388,22 @@ export default {
     beforeAvatarUpload(file, name) {
       const isJPG = file.type === "image/jpeg" || file.type === "image/png";
       const isLt2M = file.size / 1024 / 1024 < 2;
-      const h = this.$createElement;
       if (!isJPG) {
-        this.$notify({
-          title: "错误",
-          message: h(
-            "span",
-            { style: "color:#F56C6C" },
-            "上传头像图片只能是 JPG/PNG 格式!"
-          ),
-          type: "error"
-        });
+        this.$func.toast(
+          this.$createElement,
+          "error",
+          "错误",
+          "上传图片只能是 JPG/PNG 格式!"
+        );
         return false;
       }
       if (!isLt2M) {
-        this.$notify({
-          title: "错误",
-          message: h(
-            "span",
-            { style: "color:#F56C6C" },
-            "上传头像图片只能是 JPG/PNG 格式!"
-          ),
-          type: "error"
-        });
+        this.$func.toast(
+          this.$createElement,
+          "error",
+          "错误",
+          "上传图片不能超过2M!"
+        );
         return false;
       }
       this.upload[name] = true;
@@ -442,6 +444,123 @@ export default {
     },
     handleAvatarSuccessIdNumber(res, file) {
       this.handleAvatarSuccess(res, file, "idNumberPhoto");
+    },
+
+    beforeRegister() {
+      let info = this.registerInfo;
+      let waring = "";
+      for (let k in info) {
+        if (!info[k]) {
+          waring = true;
+        }
+      }
+      if (waring) {
+        this.$func.toast(
+          this.$createElement,
+          "warning",
+          "提示",
+          "注册时，请输入完整的信息！"
+        );
+        return false;
+      }
+      if (!this.$filter.phone(info.phone)) {
+        this.$func.toast(
+          this.$createElement,
+          "warning",
+          "提示",
+          "请输入正确的手机号码"
+        );
+        return false;
+      }
+      if (!this.$filter.idNumber(info.idNumber)) {
+        this.$func.toast(
+          this.$createElement,
+          "warning",
+          "提示",
+          "请输入正确的身份证号"
+        );
+        return false;
+      }
+      if (!this.$filter.email(info.mailbox)) {
+        this.$func.toast(
+          this.$createElement,
+          "warning",
+          "提示",
+          "请输入正确的邮箱"
+        );
+        return false;
+      }
+      return true;
+    },
+    /**
+     * 去注册
+     */
+    register() {
+      if (!this.beforeRegister()) {
+        return;
+      }
+      let query = {
+        ...this.registerInfo
+      };
+      this.registerLoading = true;
+      this.$axios
+        .post("/web/registered", query)
+        .then(res => {
+          this.registerLoading = false;
+          this.$func.toast(
+            this.$createElement,
+            "success",
+            "提示",
+            "注册成功，快去登录吧！"
+          );
+          this.isRegister = false;
+          this.isLogin = true;
+        })
+        .catch(err => {
+          this.registerLoading = false;
+          this.$func.toast(
+          this.$createElement,
+          "error",
+          "错误",
+          err
+        );
+        });
+    },
+    /**
+     * @description:登录
+     */
+    login(){
+      if(!this.loginInfo.username || !this.loginInfo.password){
+        this.$func.toast(
+          this.$createElement,
+          "warning",
+          "提示",
+          "请输入用户名或密码！"
+        );
+        return
+      }
+      let query = {
+        username:this.loginInfo.username,
+        password:md5(this.loginInfo.password)
+      }
+      this.loginLoading = true;
+      this.$axios.get("/web/login",query).then(
+        (res)=>{
+          this.loginLoading = false;
+          this.$func.toast(
+          this.$createElement,
+          "success",
+          "提示",
+          "登录成功")
+        }
+      ).catch(err=>{
+        this.loginLoading = false;
+        this.$func.toast(
+          this.$createElement,
+          "error",
+          "错误",
+          err)
+      })
     }
   }
 };

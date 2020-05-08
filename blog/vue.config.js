@@ -9,7 +9,7 @@ module.exports = {
     port: 8088,
     disableHostCheck: true,
     proxy: {
-      "/api": {
+      "/web": {
         target: url,
         ws: true,
         changeOrigin: true
