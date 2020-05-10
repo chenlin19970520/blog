@@ -59,6 +59,7 @@
               clearable
               @focus="addClass('password')"
               v-model="loginInfo.password"
+              @keyup.enter.native="login"
               @blur="addClass('password')"
             ></el-input>
 
