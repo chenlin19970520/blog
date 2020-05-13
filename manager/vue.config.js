@@ -16,7 +16,7 @@ module.exports = {
                 //     '^/manage': '/'
                 // }
             },
-            '/images': {
+            '/image': {
                 target: url,
                 ws: true, // 是否启用websockets
                 changOrigin: true // 开启跨域

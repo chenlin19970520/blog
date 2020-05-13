@@ -31,6 +31,9 @@
                     </template>
                 </el-table-column>
             </el-table>
+                        <div>
+                <Pagination :data="pageData" @currentChange="currentChange"/>
+            </div>
         </div>
         <el-dialog title="添加角色" class="add-role-modal" :visible.sync="showAdd" width="25%">
             <div>
@@ -52,7 +55,11 @@
 </template>
 
 <script>
+import Pagination from '@/components/common/Pagination.vue'
 export default {
+    components:{
+        Pagination
+    },
     data() {
         return {
             pageObject: {

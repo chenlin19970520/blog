@@ -86,13 +86,17 @@ export default {
                     title: '用户管理',
                     subs: [
                         {
+                            index: 'userInfo',
+                            title: '用户资料'
+                        },
+                        {
                             index: 'userAuth',
                             title: '用户审核'
                         },
-                        {
-                            index: 'userInfo',
-                            title: '用户资料'
-                        }
+                         {
+                            index: 'authHistory',
+                            title: '审核历史'
+                        },
                     ]
                 },
                 {

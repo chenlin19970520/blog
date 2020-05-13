@@ -57,13 +57,14 @@
               class="flex-one"
               placeholder="请输入密码"
               clearable
+              :type="lookCode?'text':'password'"
               @focus="addClass('password')"
               v-model="loginInfo.password"
               @keyup.enter.native="login"
               @blur="addClass('password')"
             ></el-input>
 
-            <img src alt />
+            <img class="look-icon" @click="lookCode=!lookCode" :src="lookCode?require('@/static/img/eye-close.png'):require('@/static/img/eye-open.png')" alt />
           </div>
           <div class="bottom-line">
             <div class="active-line"></div>
@@ -327,6 +328,7 @@ export default {
         idNumber: "", //身份证号
         idNumberPhoto: "" //身份证照片
       },
+      lookCode:false,
       upload: {
         avatar: false,
         face: false,
@@ -595,6 +597,11 @@ export default {
     opacity: 1;
     transform: translateX(0rem);
   }
+}
+.look-icon{
+  width:2rem;
+  height: 2rem;
+  cursor: pointer;
 }
 .login {
   width: 100vw;
