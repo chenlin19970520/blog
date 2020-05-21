@@ -555,6 +555,9 @@ export default {
           "success",
           "提示",
           "登录成功")
+          this.$func.setCookie('blogUserInfo',res)
+          this.$store.dispatch("user/modifyUserInfo",res)
+          this.$router.go(-1)
         }
       ).catch(err=>{
         this.loginLoading = false;

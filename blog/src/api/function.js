@@ -16,6 +16,21 @@ const func = {
             text),
             type:type
         })
-    }
+    },
+    //设置cookie
+    setCookie(name,data){
+        document.cookie = name+'='+JSON.stringify(data)+";expires="+new Date(new Date().getTime()+(1000*60*60*24*7))
+    },
+    //获取cookie
+    getCookie(name){
+        let allCookie = document.cookie.split(";");
+        let current = ""
+        allCookie.forEach(it=>{
+            if(it.indexOf(name)!=-1){
+                current = it;
+            }
+        })
+        return JSON.parse(current.substring(name.length+1))
+    },
 }
 export default func

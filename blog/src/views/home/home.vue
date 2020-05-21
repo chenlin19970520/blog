@@ -6,7 +6,7 @@
         <labelHeader></labelHeader>
       </div>
       <div class="list-box">
-          <articleList></articleList>
+        <articleList></articleList>
       </div>
     </div>
   </div>
@@ -15,13 +15,18 @@
 <script>
 import headerTop from "@/components/header/header.vue";
 import labelHeader from "@/components/label/labelHeader.vue";
-import articleList from "@/components/article/list.vue"
+import articleList from "@/components/article/list.vue";
 export default {
   components: {
     headerTop,
     labelHeader,
     articleList
-    
+  },
+  beforeCreate() {
+    let userInfo = this.$func.getCookie("blogUserInfo");
+    if (userInfo) {
+      this.$store.dispatch("user/modifyUserInfo", userInfo);
+    }
   }
 };
 </script>
@@ -30,8 +35,8 @@ export default {
 .mt-1 {
   margin-top: 2px;
 }
-.list-box{
-    background-color: #efefef;
-    padding-top: 3rem;
+.list-box {
+  background-color: #efefef;
+  padding-top: 3rem;
 }
 </style>

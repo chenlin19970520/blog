@@ -3,7 +3,7 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                    <i class="el-icon-lx-cascades"></i> 用户审核
+                    <i class="el-icon-lx-cascades"></i> 审核历史
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
@@ -74,7 +74,6 @@
                         </div>
                     </template>
                 </el-table-column>
-
                 <el-table-column label="操作" align="center" width="250">
                     <template slot-scope="scope">
                         <el-button
@@ -82,10 +81,7 @@
                             type="primary"
                             class="mr-20"
                             @click="lookDetail(scope.row)"
-                        >审核</el-button>
-                        <el-popconfirm title="确定删除该用户吗？" @onConfirm="del(scope.row)">
-                            <el-button slot="reference" type="danger">删除</el-button>
-                        </el-popconfirm>
+                        >详情</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -165,8 +161,8 @@
                     </el-col>
                     <el-col :span="8">
                         <div class="flex-row align-top">
-                            <div class="info-label">登录密码：</div>
-                            <div>{{detail.content.password}}</div>
+                            <div class="info-label">备注： <span></span></div>
+                            <div>{{detail.content.note}}</div>
                         </div>
                     </el-col>
                 </el-row>
@@ -207,27 +203,7 @@
                 </el-row>
             </div>
             <div class="flex-end flex-row mt-20">
-                <el-button v-loading="authLoading" type="primary" @click="auth(true)">通过</el-button>
-                <el-button v-loading="authLoading" @click="auth(false)">拒绝</el-button>
-            </div>
-        </el-dialog>
-
-        <el-dialog title="备注" class="note-modal" :visible.sync="noteShow" width="25%">
-            <div>
-                <el-input
-                    type="textarea"
-                    resize="none"
-                    :autosize="{
-                    minRows:3,
-                    maxRows:6
-
-                }"
-                    v-model="noteValue"
-                    placeholder="请输入备注"
-                ></el-input>
-            </div>
-            <div class="flex-row flex-end mt-20">
-                <el-button type="primary" @click="saveNote">确定</el-button>
+                <el-button @click="showDetail">关闭</el-button>
             </div>
         </el-dialog>
     </div>
@@ -245,32 +221,22 @@ export default {
                 show: false,
                 content: ''
             },
-
-            noteShow: false,
-            noteValue: '',
             pageObject: {
                 pageNum: 0,
                 pageSize: 10
             }, //页码
             tableLoading: false, //表格loading
-            authLoading: false,
             tableList: [],
             pageData: {}, //分页数据
             search: {
-                actualName: '',
+                name: '',
                 nameStatus: true //模糊还是精准搜索
             }, //搜索内容
             addInfo: {
                 name: '',
                 note: '',
                 presenceStatus: 1
-            },
-            showAdd: false,
-            rules: {
-                name: [{ required: true, message: '请输入角色名', trigger: 'blur' }],
-                note: [{ required: true, message: '请输入备注', trigger: 'blur' }]
-            },
-            doConfirm: ''
+            }
         };
     },
     created() {
@@ -285,77 +251,11 @@ export default {
             this.getList();
         },
         /**
-         * @description:获取列表
-         */
-        getList() {
-            let query = {
-                ...this.pageObject,
-                filers: this.func.doSearch(this.search)
-            };
-            this.tableLoading = true;
-            this.axios
-                .get('/manage/user/userAudit', {
-                    params: query
-                })
-                .then(res => {
-                    this.tableLoading = false;
-                    this.tableList = res.data.content;
-                    this.pageData = res.data;
-                })
-                .catch(err => {
-                    this.tableLoading = false;
-                });
-        },
-        /**
          * @description:打开或关闭详情窗口
          */
         showDetail() {
             this.detail.show = !this.detail.show;
             this.detail = Object.assign({}, this.detail);
-        },
-        /**
-         * @description:保存备注
-         */
-        saveNote() {
-            if (!this.noteValue.trim()) {
-                this.$message.error('请输入备注');
-                return;
-            }
-            this.noteShow = false;
-            this.doConfirm(false);
-        },
-        /**
-         * @description:审核
-         */
-        auth(status) {
-            if (!status) {
-                this.doConfirm = this.submitAuth;
-                this.noteShow = true;
-            } else {
-                this.submitAuth(status);
-            }
-        },
-        submitAuth(status) {
-            let query = {
-                certification: status ? 'PASS' : 'REJECTED',
-                userId: this.detail.content.id
-            };
-            if (this.noteValue) {
-                query.note = this.noteValue.trim();
-            }
-            this.authLoading = true;
-            this.axios
-                .post('/manage/user/userAudit', query)
-                .then(res => {
-                    this.authLoading = false;
-                    this.noteValue = ""
-                    this.$message.success(status ? '通过成功' : '拒绝成功');
-                    this.showDetail();
-                    this.getList();
-                })
-                .catch(err => {
-                    this.authLoading = false;
-                });
         },
         /**
          * 查看详情
@@ -365,20 +265,25 @@ export default {
             this.showDetail();
         },
         /**
-         * @description:删除
+         * @description:获取列表
          */
-        del(item) {
+        getList() {
             let query = {
-                ids: item.id
+                ...this.pageObject,
+                filers: this.func.doSearch(this.search)
             };
             this.tableLoading = true;
             this.axios
-                .delete('', {
+                .get('/manage/user/userAuditRecording', {
                     params: query
                 })
                 .then(res => {
-                    this.$message.success('删除成功');
-                    this.getList();
+                    this.tableLoading = false;
+                    this.tableList = res.data.content;
+                    this.pageData = res.data;
+                })
+                .catch(err => {
+                    this.tableLoading = false;
                 });
         },
         /**
@@ -393,16 +298,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.add-role-modal {
-    /deep/.el-dialog {
-        min-width: 914px;
-    }
-}
-.note-modal {
-    /deep/.el-dialog {
-        min-width: 500px;
-    }
-}
 .flex-row {
     display: flex;
     align-items: center;
@@ -413,20 +308,14 @@ export default {
 .flex-between {
     justify-content: space-between;
 }
-.align-top {
-    align-items: flex-start;
-}
 .mt-20 {
     margin-top: 20px;
 }
 .mr-20 {
     margin-right: 20px;
 }
-.mt-10 {
-    margin-top: 10px;
-}
-.w-33 {
-    width: 33%;
+.align-top {
+    align-items: flex-start;
 }
 .modal-box {
     .info-label {

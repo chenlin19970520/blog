@@ -175,8 +175,8 @@
                     </el-col>
                     <el-col :span="8">
                         <div class="flex-row align-top">
-                            <div class="info-label">登录密码：</div>
-                            <div>{{detail.content.password}}</div>
+                            <div class="info-label">备注：</div>
+                            <div>{{detail.content.note}}</div>
                         </div>
                     </el-col>
                 </el-row>

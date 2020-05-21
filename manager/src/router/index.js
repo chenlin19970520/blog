@@ -28,6 +28,10 @@ export default new Router({
                     component:()=>import("../components/views/setting/role.vue"),
                     meta:{title:"角色管理",name:"系统设置"}
                 },{
+                    path:"/authHistory",
+                    component:()=>import("../components/views/user/history.vue"),
+                    meta:{title:"用户管理",name:"审核历史"}
+                },{
                     path:"/userAuth",
                     component:()=>import("../components/views/user/auth.vue"),
                     meta:{title:"用户管理",name:"用户审核"}
