@@ -4,6 +4,17 @@
   </div>
 </template>
 
+<script>
+export default {
+  beforeCreate() {
+    let userInfo = this.$func.getCookie("blogUserInfo");
+    if (userInfo) {
+      this.$store.dispatch("user/modifyUserInfo", userInfo);
+    }
+  }
+}
+</script>
+
 <style lang="less" scoped>
 html,
 body {
@@ -33,6 +44,9 @@ body {
       }
     }
   }
+}
+.color-main{
+  color:#098FA4;
 }
 
 .color-list {

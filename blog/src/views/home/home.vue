@@ -22,12 +22,6 @@ export default {
     labelHeader,
     articleList
   },
-  beforeCreate() {
-    let userInfo = this.$func.getCookie("blogUserInfo");
-    if (userInfo) {
-      this.$store.dispatch("user/modifyUserInfo", userInfo);
-    }
-  }
 };
 </script>
 

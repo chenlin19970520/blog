@@ -16,7 +16,7 @@
                     <el-input  size="small" placeholder="搜索博客"  suffix-icon="el-icon-search"></el-input>
                 </div>
                 <div class="write">
-                    <el-button size="small" type="primary" icon="el-icon-edit-outline">写文章</el-button>
+                    <el-button size="small" type="primary" @click="write" icon="el-icon-edit-outline">写文章</el-button>
                 </div>
                 <div class="info"  @click="goInfo" >
                     <el-avatar size="medium" type="primary" :src="userInfo&&userInfo.avatar?userInfo.avatar:require('@/static/img/avatar_male.png')"></el-avatar>
@@ -56,6 +56,12 @@ export default {
          */
         goInfo(){
             this.$router.push("/login")
+        },
+        /**
+         * @description:去写博客
+         */
+        write(){
+            this.$router.push("/write")
         }
     }
 }

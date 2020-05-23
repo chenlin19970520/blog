@@ -14,6 +14,10 @@ Vue.use(VueRouter)
     path:"/login",
     name:"login",
     component:()=>import("../views/login/login.vue")
+  },{
+    path:"/write",
+    name:"write",
+    component:()=>import("../views/write/markdown.vue")
   }
 ]
 
@@ -21,7 +25,7 @@ const router = new VueRouter({
   routes
 })
 router.beforeEach((to, from, next) => {
-
+   console.log(to)
    next();
 })
 
