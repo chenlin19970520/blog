@@ -18,6 +18,10 @@ Vue.use(VueRouter)
     path:"/write",
     name:"write",
     component:()=>import("../views/write/markdown.vue")
+  },{
+    path:"/userCenter",
+    name:"userCenter",
+    component:()=>import("../views/user/info.vue")
   }
 ]
 

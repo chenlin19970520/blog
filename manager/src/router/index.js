@@ -41,15 +41,15 @@ export default new Router({
                     meta:{title:"用户管理",name:"用户资料"}
                 },{
                     path:"/articleList",
-                    component:()=>import("../components/views/user/info.vue"),
+                    component:()=>import("../components/views/article/list.vue"),
                     meta:{title:"文章管理",name:"文章库"}
                 },{
                     path:"/articleLabel",
-                    component:()=>import("../components/views/user/info.vue"),
+                    component:()=>import("../components/views/article/label.vue"),
                     meta:{title:"文章管理",name:"文章标签"}
                 },{
                     path:"/articleComment",
-                    component:()=>import("../components/views/user/info.vue"),
+                    component:()=>import("../components/views/article/comment.vue"),
                     meta:{title:"文章管理",name:"评论"}
                 }
             ]

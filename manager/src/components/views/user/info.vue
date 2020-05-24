@@ -175,8 +175,8 @@
                     </el-col>
                     <el-col :span="8">
                         <div class="flex-row align-top">
-                            <div class="info-label">备注：</div>
-                            <div>{{detail.content.note}}</div>
+                            <div class="info-label">登录密码：</div>
+                            <div>{{detail.content.password}}</div>
                         </div>
                     </el-col>
                 </el-row>
@@ -184,7 +184,7 @@
                     <el-col :span="8">
                         <div class="info-label">本人照片：</div>
                         <div class="info-img">
-                            <el-image :src="detail.content.face">
+                            <el-image :src="detail.content.face" :preview-src-list="[detail.content.face]">
                                 <div slot="placeholder" class="image-slot">
                                     <i class="el-icon-loading"></i>
                                     <span>加载中</span>
@@ -195,7 +195,7 @@
                     <el-col :span="8">
                          <div class="info-label">用户头像：</div>
                         <div class="info-img">
-                            <el-image :src="detail.content.avatar">
+                            <el-image :src="detail.content.avatar" :preview-src-list="[detail.content.avatar]">
                                 <div slot="placeholder" class="image-slot">
                                     <i class="el-icon-loading"></i>
                                     <span>加载中</span>
@@ -206,7 +206,7 @@
                     <el-col :span="8">
                          <div class="info-label">身份证：</div>
                         <div class="info-img">
-                            <el-image :src="detail.content.idNumberPhoto">
+                            <el-image :src="detail.content.idNumberPhoto" :preview-src-list="[detail.content.idNumberPhoto]">
                                 <div slot="placeholder" class="image-slot">
                                     <i class="el-icon-loading"></i>
                                     <span>加载中</span>
