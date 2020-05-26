@@ -21,7 +21,7 @@ body {
   width: 100%;
   height: 100%;
   padding: 0;
-  background-color: rgba(244, 245, 245, 1);
+  background-color: #efefef;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -44,6 +44,10 @@ body {
       }
     }
   }
+}
+/deep/.el-button--primary{
+  background-color: #098FA4 !important;
+  border-color: #098FA4 !important;
 }
 .color-main{
   color:#098FA4;

@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home" >
     <div class="header">
       <headerTop></headerTop>
       <div class="mt-1">
@@ -22,6 +22,9 @@ export default {
     labelHeader,
     articleList
   },
+  methods:{
+    load(){}
+  }
 };
 </script>
 
@@ -31,6 +34,6 @@ export default {
 }
 .list-box {
   background-color: #efefef;
-  padding-top: 3rem;
+  padding-top: 1.25rem;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="article_list">
+  <div class="article_list"  >
     <div class="list-body">
       <div class="body-type">
         <div class="type-item type-active">热门</div>
@@ -45,7 +45,54 @@
 export default {
   data(){
     return{
-      list:[1,1,11,1,1,1,1,1]
+      list:[1,1,11,1,1,1,1,1],
+      getStatus:true,//获取数据是否可以
+    }
+  },
+  created(){
+    let that =this;
+    window.addEventListener("scroll",function(e){
+      let scroll = window.scrollY;
+      let windowHeight = window.innerHeight;
+      let allHeight = document.body.scrollHeight;
+      if(scroll+windowHeight>=allHeight-100){
+        that.getArticleList();
+      }
+     else{
+       console.log("false")
+     }
+    })
+  },
+  methods:{
+    /**
+     * @description:获取文章列表
+     * @author:chenlin
+     * @time:2020-05-26
+     */
+    getArticleList(){
+      if(!this.getStatus){
+        return;
+      }
+      let query = {
+        pageNum:this.pageNum,
+        pageSize:this.pageSize,
+      }
+      this.getStatus =false;
+      this.$axios.get("/web/user/article",query).then(
+        (res)=>{
+          this.setStatus();
+        }
+      ).catch(err=>{
+        this.setStatus();
+      })
+    },
+    /**
+     * @desciprition:设置可以获取数据
+     */
+    setStatus(){
+      setTimeout(()=>{
+        this.getStatus = true
+      },500)
     }
   }
 };

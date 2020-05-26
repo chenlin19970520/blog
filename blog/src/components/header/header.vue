@@ -6,7 +6,7 @@
                     <img src="@/static/img/logo.jpg" alt="">
                 </div>
                 <div class="header-menu">
-                    <div class="menu-item" v-for="(item,index) in menu" :key="index">
+                    <div class="menu-item"  @click="go(item.key)" v-for="(item,index) in menu" :key="index">
                         {{item.name}}
                     </div>
                 </div>
@@ -33,7 +33,7 @@ export default {
             menu:[
                 {
                     name:"首页",
-                    key:""
+                    key:"/"
                 },{
                     name:"文章",
                     key:""
@@ -55,7 +55,16 @@ export default {
          * @description:如果未登录去登陆。
          */
         goInfo(){
+            if(this.userInfo&&this.userInfo.id){
+                this.$router.push("/userCenter")
+                return;
+            }
             this.$router.push("/login")
+        },
+        go(key){
+            this.$router.push({
+                path:key
+            })
         },
         /**
          * @description:去写博客
@@ -110,6 +119,9 @@ export default {
         .body-right{
             display: flex;
             align-items: center;
+            .info{
+                cursor: pointer;
+            }
             .search{
                 margin-right: 20px;
             }

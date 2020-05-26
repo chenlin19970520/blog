@@ -1,6 +1,7 @@
 import axios from "axios";
 let http = axios.create({
-  timeout: 30000
+  timeout: 30000,
+  withCredentials:false,
 });
 
 http.defaults.headers.post["Content-Type"] = "application/json";

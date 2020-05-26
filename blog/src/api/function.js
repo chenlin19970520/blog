@@ -30,7 +30,7 @@ const func = {
                 current = it;
             }
         })
-        return JSON.parse(current.substring(name.length+1))
+        return current?JSON.parse(current.substring(name.length+1)):""
     },
 }
 export default func
