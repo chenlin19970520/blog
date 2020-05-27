@@ -22,6 +22,10 @@ Vue.use(VueRouter)
     path:"/userCenter",
     name:"userCenter",
     component:()=>import("../views/user/info.vue")
+  },{
+    path:"/userEdit",
+    name:"userEdit",
+    component:()=>import("../views/user/editInfo.vue")
   }
 ]
 

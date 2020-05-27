@@ -27,7 +27,7 @@
               </div>
             </div>
             <div>
-              <el-button type="primary">编辑个人资料</el-button>
+              <el-button type="primary" @click="editUserInfo">编辑个人资料</el-button>
             </div>
           </div>
 
@@ -90,7 +90,13 @@ export default {
         }
       )
     },
-
+    /**
+     * @description:去编辑个人资料
+     * @author:chenlin
+     */
+    editUserInfo(){
+      this.$router.push("/userEdit")
+    },
     handleClick(tab, event){
       console.log(tab, event)
     }
