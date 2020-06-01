@@ -51,6 +51,7 @@ export default {
     return {
       articleValue: "", //文章内容
       articleTitle: "", //文章标题
+      articleValueHtml:"",//html文章内容
       articleVisible: true, //文章可见性，false，公开，true，私有
       releaseModal: false, //控制发布弹窗
       releaseStatus: false //发布loading
@@ -67,7 +68,7 @@ export default {
      * @description：获取html
      */
     getInput(e, value) {
-      console.log(e, value);
+      this.articleValueHtml = value;
     },
     /**
      * @description:阻止点击事件
@@ -92,7 +93,7 @@ export default {
      */
     release() {
       let query = {
-        content: this.articleValue,
+        content: this.articleValueHtml,
         exclusive: !this.articleVisible,
         label: "", //
         presenceStatus: 1, //新建

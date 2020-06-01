@@ -10,13 +10,14 @@
           <div class="item-left">
             <div class="item-info">
               <div class="item-label">专栏</div>
-              <div class="item-name">司徒老美</div>
-              <div class="item-time">10分钟前</div>
+              <div class="item-name" >{{item.nickname}}</div>
+              <div class="item-time">{{item.creatTime|dateTime}}</div>
               <div class="item-type">前端</div>
             </div>
             <div
               class="item-title"
-            >🏆掘金技术征文开启啦，快用你的面试经验换大奖 ~掘金技术征文开启啦，快用你的面试经验换大奖 ~掘金技术征文开启啦，快用你的面试经验换大奖 ~掘金技术征文开启啦，快用你的面试经验换大奖 ~</div>
+              @click="lookItem(item)"
+            >{{item.title}}</div>
             <div class="item-content">掘金技术征文开启啦，快用你的面试经验换大奖 ~</div>
             <div class="item-opreating">
               <div class="opreat-box">
@@ -45,25 +46,42 @@
 export default {
   data(){
     return{
-      list:[1,1,11,1,1,1,1,1],
+      pageSize:20,
+      pageNum:0,
+      list:[],
       getStatus:true,//获取数据是否可以
     }
   },
   created(){
     let that =this;
+    this.getArticleList();
     window.addEventListener("scroll",function(e){
       let scroll = window.scrollY;
       let windowHeight = window.innerHeight;
       let allHeight = document.body.scrollHeight;
       if(scroll+windowHeight>=allHeight-100){
+        that.pageNum = that.pageNum + 1;
         that.getArticleList();
       }
      else{
-       console.log("false")
+       
      }
     })
   },
   methods:{
+    /**
+     * @description:查看文章详情
+     */
+    lookItem(item){
+      sessionStorage.setItem("blog_article_detail",JSON.stringify(item));
+      // this.$router.push({
+      //   path:"/articleDetail",
+      // })
+      let routeUrl = this.$router.resolve({
+        path:"/articleDetail",
+      })
+      window.open(routeUrl.href,"_blank")
+    },
     /**
      * @description:获取文章列表
      * @author:chenlin
@@ -81,6 +99,15 @@ export default {
       this.$axios.get("/web/user/article",query).then(
         (res)=>{
           this.setStatus();
+          if(!res.content||!res.content.length){
+            this.pageNum = this.pageNum - 1;
+            
+          }
+          let list = JSON.parse(JSON.stringify(
+            this.list
+          ))
+          list = list.concat(res.content);
+          this.list = list;          
         }
       ).catch(err=>{
         this.setStatus();

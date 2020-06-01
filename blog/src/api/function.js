@@ -17,6 +17,23 @@ const func = {
             type:type
         })
     },
+    changeDate(time,length){
+        let date = time?new Date(time):new Date();
+        let year = date.getFullYear()
+        let month = date.getMonth()+1;
+        let day = date.getDate();
+        let hour = date.getHours();
+        let minute = date.getMinutes();
+        let second = date.getSeconds()
+        return year+'-'+this.checkSize(month)+"-"+this.checkSize(day)+" "+this.checkSize(hour)+":"+this.checkSize(minute)+":"+this.checkSize(second)
+    },
+    checkSize(val){
+        if(val<10){
+            return '0'+val;
+        }else{
+            return val;
+        }
+    },
     //设置cookie
     setCookie(name,data){
         document.cookie = name+'='+JSON.stringify(data)+";expires="+new Date(new Date().getTime()+(1000*60*60*24*7))

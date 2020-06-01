@@ -33,14 +33,29 @@
 
           <div class="article-box">
             <el-tabs v-model="tabActive" @tab-click="handleClick">
-              <el-tab-pane label="文章" name="article">
+              <el-tab-pane :label="'文章 '+articleList.length" name="article">
                 <div class="article-list">
-
+                  <div class="article-item" v-for="(item,index) in articleList" :key="index">
+                    <div class="item-info">
+                      <img class="avatar" :src="userInfo.avatar" alt />
+                      <span class="name">{{userInfo.nickname}}</span>
+                      <span class="pointer"></span>
+                      <span>{{userInfo.createTime | dateTime}}</span>
+                    </div>
+                    <div class="item-title">
+                      {{item.title}}
+                    </div>
+                  </div>
+                </div>
+                <div class="article-more">
+                  查看更多
                 </div>
               </el-tab-pane>
-              <el-tab-pane label="动态" name="dynamic">用户管理</el-tab-pane>
-              <el-tab-pane label="赞 0" name="third">角色管理</el-tab-pane>
-              <el-tab-pane label="评论 0" name="fourth">定时任务补偿</el-tab-pane>
+              <el-tab-pane label="动态" name="dynamic">
+                无
+              </el-tab-pane>
+              <el-tab-pane label="赞 0" name="third">无</el-tab-pane>
+              <el-tab-pane label="评论 0" name="fourth">无</el-tab-pane>
             </el-tabs>
           </div>
         </div>
@@ -56,56 +71,51 @@ export default {
   components: {
     headerTop
   },
-  data(){
-    return{
-      tabActive:"article",
+  data() {
+    return {
+      tabActive: "article",
 
-
-      pageNum:1,
-      pageSize:20
-    }
+      pageNum: 0,
+      pageSize: 20,
+      articleList: []
+    };
   },
   computed: {
     userInfo() {
       return this.$store.state.user.userInfo;
     }
   },
-  created(){
-    this.getArticleList()
+  created() {
+    this.getArticleList();
   },
-  methods:{
+  methods: {
     /**
      * @description:获取文章列表
      * @author:chenlin
      * @time:2020-05-26
      */
-    getArticleList(){
+    getArticleList() {
       let query = {
-        pageNum:this.pageNum,
-        pageSize:this.pageSize,
-      }
-      this.$axios.get("/web/user/article",query).then(
-        (res)=>{
-          console.log(res)
-        }
-      )
+        pageNum: this.pageNum,
+        pageSize: this.pageSize
+      };
+      this.$axios.get("/web/user/article", query).then(res => {
+        this.articleList = res.content;
+      });
     },
     /**
      * @description:去编辑个人资料
      * @author:chenlin
      */
-    editUserInfo(){
-      this.$router.push("/userEdit")
+    editUserInfo() {
+      this.$router.push("/userEdit");
     },
-    handleClick(tab, event){
-      console.log(tab, event)
-    }
+    handleClick(tab, event) {}
   }
 };
 </script>
 
 <style lang="less" scoped>
-
 .user-center {
   background-color: #efefef;
 }
@@ -167,26 +177,72 @@ export default {
       margin-top: 1.25rem;
       background-color: white;
       border-radius: 3px;
-      .article-list{
+        .article-more{
+          color: #666;
+          height: 40px;
+          line-height: 40px;
+          font-size: 14px;
+          cursor: pointer;
+        }
+      .article-list {
         min-height: 300px;
-      
+
+        .article-item {
+          padding: 2rem;
+          border-bottom: 1px solid hsla(0, 0%, 59.2%, 0.1);
+          .item-title{
+            color: #666;
+            font-size: 26px;
+            font-weight: bold;
+            text-align: left;
+            margin-top:1rem;
+            cursor: pointer;
+          }
+          .item-info {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #999;
+          }
+          .pointer {
+            width: 2px;
+            height: 2px;
+            display: block;
+            border-radius: 50%;
+            background-color: #999;
+            margin-right: 10px;
+          }
+          .avatar {
+            width: 35px;
+            height: 35px;
+            display: block;
+            object-fit: cover;
+            border-radius: 100%;
+            margin-right: 10px;
+          }
+          .name {
+            margin-right: 10px;
+          }
+        }
       }
-      /deep/.el-tabs__nav-wrap{
-        .el-tabs__item{
-          padding: .5rem 0rem;
+      /deep/.el-tabs__nav-wrap {
+        .el-tabs__item {
+          padding: 0.5rem 0rem;
           width: 7rem;
           height: auto;
         }
-        &::after{
+        &::after {
           height: 1px;
-        }.el-tabs__item{
+        }
+        .el-tabs__item {
           font-size: 16px;
         }
-        .el-tabs__item:hover,.el-tabs__item.is-active{
-          color: #098FA4;
+        .el-tabs__item:hover,
+        .el-tabs__item.is-active {
+          color: #098fa4;
         }
-        .el-tabs__active-bar{
-          background-color:#098FA4;
+        .el-tabs__active-bar {
+          background-color: #098fa4;
         }
       }
     }

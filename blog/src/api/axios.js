@@ -18,7 +18,6 @@ http.interceptors.request.use(
 );
 
 http.interceptors.response.use(response => {
-  // console.log(response);
   let { data, code, msg } = response.data;
   if (code == 200 || code == 204) {
     return Promise.resolve(data);

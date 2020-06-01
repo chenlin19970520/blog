@@ -5,8 +5,8 @@
       <div class="set-item">
         <div class="set-title">头像</div>
         <div class="set-input">
-            <div>
-                <img src="" alt="">
+            <div class="avatar">
+                <img :src="editUser.avatar" alt="">
             </div>
             <div>
                 <div>支持jpg、png格式大小5M以内的图片</div>
@@ -19,7 +19,18 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data(){
+    return{
+      editUser:{},//修改资料
+    }
+  },
+  computed:{
+    user(){
+      return this.$store.state.user.userInfo 
+    }
+  }
+};
 </script>
 
 <style lang="less" scoped>
