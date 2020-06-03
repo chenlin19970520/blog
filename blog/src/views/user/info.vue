@@ -42,18 +42,24 @@
                       <span class="pointer"></span>
                       <span>{{userInfo.createTime | dateTime}}</span>
                     </div>
-                    <div class="item-title">
-                      {{item.title}}
+                    <div class="item-title">{{item.title}}</div>
+                    <div class="item-more">
+                      <div class="more-read">阅读&nbsp;{{item.reading?item.reading:0}}</div>
+                      <el-dropdown trigger="click" @command="handleCommand($event,item)">
+                        <div class="more-opeat">
+                          <img class="opeat-img" src="@/static/img/more.png" alt />
+                        </div>
+                        <el-dropdown-menu slot="dropdown">
+                          <el-dropdown-item command="edit">编辑</el-dropdown-item>
+                          <el-dropdown-item command="delete">删除</el-dropdown-item>
+                        </el-dropdown-menu>
+                      </el-dropdown>
                     </div>
                   </div>
                 </div>
-                <div class="article-more">
-                  查看更多
-                </div>
+                <div class="article-more">查看更多</div>
               </el-tab-pane>
-              <el-tab-pane label="动态" name="dynamic">
-                无
-              </el-tab-pane>
+              <el-tab-pane label="动态" name="dynamic">无</el-tab-pane>
               <el-tab-pane label="赞 0" name="third">无</el-tab-pane>
               <el-tab-pane label="评论 0" name="fourth">无</el-tab-pane>
             </el-tabs>
@@ -87,8 +93,67 @@ export default {
   },
   created() {
     this.getArticleList();
+    this.getUserInfo();
   },
   methods: {
+    /**
+     * @description:获取个人信息
+     */
+    getUserInfo() {
+      this.$axios.get("/web/user/user").then(res => {
+        this.$func.setCookie("blogInfoDetail", res);
+        this.$store.dispatch("user/modifyUserInfoDetail", res);
+      });
+    },
+    /**
+     * @description:去编辑该文章
+     * @author:chenlin
+     */
+    editArticle(item) {
+      sessionStorage.setItem("blog_edit_article", JSON.stringify(item));
+      this.$router.push("/write");
+    },
+    /**
+     * @description:删除该文章
+     * @author:chenlin
+     */
+    deleteArticel(item) {
+      let _this = this;
+      this.$confirm("此操作将删除该文章且不可恢复,是否继续操作?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        cancelButtonClass: "cancel-btn-primary",
+        confirmButtonClass: "confirm-btn-primary",
+        type: "warning"
+      })
+        .then(() => {
+          _this.$axios
+            .delete("/web/user/article", {
+              ids: item.articleId
+            })
+            .then(res => {
+              _this.$func.toast(
+                _this.$createElement,
+                "success",
+                "提示",
+                "删除成功！"
+              );
+              _this.getArticleList();
+            });
+        })
+        .catch();
+    },
+    /**
+     * @description:菜单操作
+     * @author:chenlin
+     */
+    handleCommand(command, item) {
+      if (command == "delete") {
+        this.deleteArticel(item);
+      } else if (command == "edit") {
+        this.editArticle(item);
+      }
+    },
     /**
      * @description:获取文章列表
      * @author:chenlin
@@ -116,6 +181,15 @@ export default {
 </script>
 
 <style lang="less" scoped>
+/deep/.el-dropdown-menu__item:focus,
+.el-dropdown-menu__item:not(.is-disabled):hover {
+  background-color: rgba(9, 143, 164, 0.25);
+  color: #098fa4;
+}
+
+/deep/.el-button--primary:focus,
+.el-button--primary:hover {
+}
 .user-center {
   background-color: #efefef;
 }
@@ -177,26 +251,42 @@ export default {
       margin-top: 1.25rem;
       background-color: white;
       border-radius: 3px;
-        .article-more{
-          color: #666;
-          height: 40px;
-          line-height: 40px;
-          font-size: 14px;
-          cursor: pointer;
-        }
+      .article-more {
+        color: #666;
+        height: 40px;
+        line-height: 40px;
+        font-size: 14px;
+        cursor: pointer;
+      }
       .article-list {
         min-height: 300px;
 
         .article-item {
           padding: 2rem;
           border-bottom: 1px solid hsla(0, 0%, 59.2%, 0.1);
-          .item-title{
+          .item-title {
             color: #666;
             font-size: 26px;
             font-weight: bold;
             text-align: left;
-            margin-top:1rem;
+            margin-top: 1rem;
             cursor: pointer;
+          }
+          .item-more {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: flex-end;
+            .more-read {
+              font-size: 12px;
+              color: #bfbfbf;
+              margin-right: 1rem;
+            }
+            .more-opeat {
+              cursor: pointer;
+              .opeat-img {
+                width: 20px;
+              }
+            }
           }
           .item-info {
             display: flex;

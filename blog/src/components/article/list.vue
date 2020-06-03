@@ -18,7 +18,7 @@
               class="item-title"
               @click="lookItem(item)"
             >{{item.title}}</div>
-            <div class="item-content">掘金技术征文开启啦，快用你的面试经验换大奖 ~</div>
+            <div class="item-content">技术征文开启啦，快用你的面试经验换大奖 ~</div>
             <div class="item-opreating">
               <div class="opreat-box">
                 <div class="box-like">
@@ -38,7 +38,7 @@
         </div>
       </div>
     </div>
-    <div class="list-other">dd</div>
+    <div class="list-other"></div>
   </div>
 </template>
 

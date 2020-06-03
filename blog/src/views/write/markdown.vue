@@ -4,7 +4,7 @@
       <el-input placeholder="输入文章标题..." v-model="articleTitle"></el-input>
       <div class="right-menu">
         <div class="release" @click="showReleaseModal">
-          <span>发布</span>
+          <span>{{articleId?'更新':'发布'}}</span>
           <img class="down-img" src="@/static/img/down.png" alt />
         </div>
         <div class="avatar">
@@ -49,6 +49,7 @@
 export default {
   data() {
     return {
+      articleId:"",//文章id,编辑时有
       articleValue: "", //文章内容
       articleTitle: "", //文章标题
       articleValueHtml:"",//html文章内容
@@ -57,11 +58,22 @@ export default {
       releaseStatus: false //发布loading
     };
   },
-  created() {},
+  created() {
+    let article = sessionStorage.getItem("blog_edit_article")?JSON.parse(sessionStorage.getItem('blog_edit_article')):''
+    console.log(JSON.parse(sessionStorage.getItem('blog_edit_article')))
+    if(article){
+      this.articleTitle = article.title;
+      this.articleValue = article.content;
+      this.articleId = article.articleId
+    }
+  },
   computed: {
     userInfo() {
       return this.$store.state.user.userInfo;
     }
+  },
+  destroyed(){
+    sessionStorage.removeItem("blog_edit_article");
   },
   methods: {
     /**
@@ -208,6 +220,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    background-color: white;
     /deep/.el-input {
       flex: 1;
       font-size: 24px;

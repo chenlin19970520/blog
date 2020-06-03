@@ -11,6 +11,10 @@ export default {
     if (userInfo) {
       this.$store.dispatch("user/modifyUserInfo", userInfo);
     }
+    let userInfoDetail = this.$func.getCookie("blogInfoDetail");
+    if(userInfoDetail){
+      this.$store.dispatch("user/modifyUserInfoDetail",userInfoDetail)
+    }
   }
 }
 </script>

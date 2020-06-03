@@ -13,7 +13,7 @@
                     <div class="detail-name">{{detail.nickname}}</div>
                     <div class="detail-date">
                         <span>{{detail.createTime | changeDate}}</span>
-                        <span>{{}}</span>
+                        <span>&nbsp;&nbsp;阅读 &nbsp;{{detail.reading?detail.reading:0}}</span>
                     </div>
                 </div>
             </div>
@@ -34,6 +34,9 @@ export default {
   },
   created(){
 
+  },
+  destroyed(){
+    sessionStorage.removeItem("blog_article_detail")
   },
   computed: {
     userInfo() {

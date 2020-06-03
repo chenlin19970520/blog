@@ -1,24 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title>番薯叶的博客</title>
-    <!-- <link href="https://cdn.bootcss.com/github-markdown-css/2.10.0/github-markdown.min.css" rel="stylesheet"> -->
-  </head>
-  <style>
-    body{
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+  <title>番薯叶的博客</title>
+  <!-- <link href="https://cdn.bootcss.com/github-markdown-css/2.10.0/github-markdown.min.css" rel="stylesheet"> -->
+</head>
+<style>
+  body {
     margin: 0 !important;
     background-color: #efefef;
-}
-  </style>
-  <body>
-    <noscript>
-      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
+  }
+
+  .confirm-btn-primary {
+    background-color: #098FA4 !important;
+    border-color: #098FA4 !important;
+  }
+
+  .confirm-btn-primary:hover {
+    background-color: rgba(9, 143, 164, 0.75) !important;
+    border-color: rgba(9, 143, 164, 0.5) !important;
+  }
+
+  .cancel-btn-primary:hover {
+    border-color: rgba(9, 143, 164, 0.5) !important;
+    color: rgba(9, 143, 164, 1) !important;
+  }
+</style>
+
+<body>
+  <noscript>
+    <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
+      Please enable it to continue.</strong>
+  </noscript>
+  <div id="app"></div>
+  <!-- built files will be auto injected -->
+</body>
+
 </html>

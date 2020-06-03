@@ -1,4 +1,5 @@
 import axios from "axios";
+import func from "./function"
 let http = axios.create({
   timeout: 30000,
   withCredentials:false,
@@ -21,7 +22,11 @@ http.interceptors.response.use(response => {
   let { data, code, msg } = response.data;
   if (code == 200 || code == 204) {
     return Promise.resolve(data);
-  } else {
+  } if(code==401){
+    func.deleteCookie("blogUserInfo")
+    this.$router.replace("/")
+    this.$store.dispatch("user/modifyUserInfo","")
+  }else {
     return Promise.reject(msg);
   }
 });

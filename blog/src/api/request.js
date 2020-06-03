@@ -22,7 +22,6 @@ export default {
       let info = global.getCookie('blogUserInfo');
       options.headers.token = info?info.token:""
     }
-    console.log(options)
     return instance.get(url, options);
   },
   post(url, query, headers) {
@@ -38,5 +37,19 @@ export default {
       options.headers.token = info?info.token:""
     }
     return instance.post(url, query, options);
-  }
+  },
+  delete(url, query, headers) {
+    let options = {};
+
+    if (headers) {
+      options.headers = headers;
+    } else {
+      options.headers = {};
+    }
+    if(!options.headers.token){
+      let info = global.getCookie('blogUserInfo');
+      options.headers.token = info?info.token:""
+    }
+    return instance.delete(url, query, options);
+  },
 };

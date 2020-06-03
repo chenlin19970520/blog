@@ -35,8 +35,11 @@ const func = {
         }
     },
     //设置cookie
-    setCookie(name,data){
-        document.cookie = name+'='+JSON.stringify(data)+";expires="+new Date(new Date().getTime()+(1000*60*60*24*7))
+    setCookie(name,data,time){
+        document.cookie = name+'='+JSON.stringify(data)+";expires="+new Date(new Date().getTime()+(1000*60*60*24))
+    },
+    deleteCookie(name){
+        document.cookie = name+"=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
     },
     //获取cookie
     getCookie(name){
@@ -47,7 +50,7 @@ const func = {
                 current = it;
             }
         })
-        return current?JSON.parse(current.substring(name.length+1)):""
+        return current?JSON.parse(current.trim().substring(name.length+1)):""
     },
 }
 export default func
