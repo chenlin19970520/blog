@@ -42,7 +42,7 @@
                       <span class="pointer"></span>
                       <span>{{userInfo.createTime | dateTime}}</span>
                     </div>
-                    <div class="item-title">{{item.title}}</div>
+                    <div class="item-title" @click="lookItem(item)">{{item.title}}</div>
                     <div class="item-more">
                       <div class="more-read">阅读&nbsp;{{item.reading?item.reading:0}}</div>
                       <el-dropdown trigger="click" @command="handleCommand($event,item)">
@@ -57,7 +57,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="article-more">查看更多</div>
+                <div class="article-more" v-if="articleList&&articleList.length" v-loading="moreLoading" @click="getMore">查看更多</div>
               </el-tab-pane>
               <el-tab-pane label="动态" name="dynamic">无</el-tab-pane>
               <el-tab-pane label="赞 0" name="third">无</el-tab-pane>
@@ -83,7 +83,8 @@ export default {
 
       pageNum: 0,
       pageSize: 20,
-      articleList: []
+      articleList: [],
+      moreLoading: false //查看更多。
     };
   },
   computed: {
@@ -96,6 +97,16 @@ export default {
     this.getUserInfo();
   },
   methods: {
+    /**
+     * @description:查看文章详情
+     */
+    lookItem(item) {
+      sessionStorage.setItem("blog_article_detail", JSON.stringify(item));
+      let routeUrl = this.$router.resolve({
+        path: "/articleDetail"
+      });
+      window.open(routeUrl.href, "_blank");
+    },
     /**
      * @description:获取个人信息
      */
@@ -127,19 +138,18 @@ export default {
         type: "warning"
       })
         .then(() => {
-          _this.$axios
-            .delete("/web/user/article", {
-              ids: item.articleId
-            })
-            .then(res => {
-              _this.$func.toast(
-                _this.$createElement,
-                "success",
-                "提示",
-                "删除成功！"
-              );
-              _this.getArticleList();
-            });
+          let query = {
+            ids: item.articleId
+          };
+          _this.$axios.delete("/web/user/article", query).then(res => {
+            _this.$func.toast(
+              _this.$createElement,
+              "success",
+              "提示",
+              "删除成功！"
+            );
+            _this.getArticleList();
+          });
         })
         .catch();
     },
@@ -159,14 +169,32 @@ export default {
      * @author:chenlin
      * @time:2020-05-26
      */
-    getArticleList() {
+    getArticleList(pageNum) {
       let query = {
-        pageNum: this.pageNum,
+        pageNum: pageNum ? pageNum : this.pageNum,
         pageSize: this.pageSize
       };
       this.$axios.get("/web/user/article", query).then(res => {
-        this.articleList = res.content;
+        if (res && res.content && res.content.length) {
+          this.pageNum = pageNum ? pageNum : this.pageNum;
+        } else if (pageNum) {
+          this.$func.toast(
+            this.$createElement,
+            "warning",
+            "警告",
+            "没有更多数据了"
+          );
+        }
+        this.moreLoading = false;
+        this.articleList = this.articleList.concat(res.content);
       });
+    },
+    /**
+     * @description:获取下一页文章列表
+     */
+    getMore() {
+      this.moreLoading = true;
+      this.getArticleList(this.pageNum + 1);
     },
     /**
      * @description:去编辑个人资料

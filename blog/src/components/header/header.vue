@@ -19,7 +19,7 @@
                     <el-button size="small" type="primary" @click="write" icon="el-icon-edit-outline">写文章</el-button>
                 </div>
                 <div class="info"  @click="goInfo" >
-                    <el-avatar size="medium" type="primary" :src="userInfo&&userInfo.avatar?userInfo.avatar:require('@/static/img/avatar_male.png')"></el-avatar>
+                    <el-avatar size="medium" type="primary" :src="infoDetail&&infoDetail.avatar?infoDetail.avatar:require('@/static/img/avatar_male.png')"></el-avatar>
                 </div>
             </div>
         </div>
@@ -48,6 +48,9 @@ export default {
     computed:{
         userInfo(){
             return this.$store.state.user.userInfo
+        },
+        infoDetail(){
+            return this.$store.state.user.infoDetail
         }
     },
     methods:{

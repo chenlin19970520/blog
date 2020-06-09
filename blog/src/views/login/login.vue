@@ -64,7 +64,12 @@
               @blur="addClass('password')"
             ></el-input>
 
-            <img class="look-icon" @click="lookCode=!lookCode" :src="lookCode?require('@/static/img/eye-close.png'):require('@/static/img/eye-open.png')" alt />
+            <img
+              class="look-icon"
+              @click="lookCode=!lookCode"
+              :src="lookCode?require('@/static/img/eye-close.png'):require('@/static/img/eye-open.png')"
+              alt
+            />
           </div>
           <div class="bottom-line">
             <div class="active-line"></div>
@@ -309,7 +314,7 @@
 </template>
 
 <script>
-import md5 from "md5"
+import md5 from "md5";
 export default {
   components: {},
   data() {
@@ -328,7 +333,7 @@ export default {
         idNumber: "", //身份证号
         idNumberPhoto: "" //身份证照片
       },
-      lookCode:false,
+      lookCode: false,
       upload: {
         avatar: false,
         face: false,
@@ -346,7 +351,7 @@ export default {
       ],
       loginInfo: {
         username: "",
-        password:""
+        password: ""
       }, //登录信息
       isLogin: true, //是否是登录
       isRegister: false, //是否是注册
@@ -521,52 +526,56 @@ export default {
         })
         .catch(err => {
           this.registerLoading = false;
-          this.$func.toast(
-          this.$createElement,
-          "error",
-          "错误",
-          err
-        );
+          this.$func.toast(this.$createElement, "error", "错误", err);
         });
     },
     /**
      * @description:登录
      */
-    login(){
-      if(!this.loginInfo.username || !this.loginInfo.password){
+    login() {
+      if (!this.loginInfo.username || !this.loginInfo.password) {
         this.$func.toast(
           this.$createElement,
           "warning",
           "提示",
           "请输入用户名或密码！"
         );
-        return
+        return;
       }
       let query = {
-        username:this.loginInfo.username,
-        password:md5(this.loginInfo.password)
-      }
+        username: this.loginInfo.username,
+        password: md5(this.loginInfo.password)
+      };
       this.loginLoading = true;
-      this.$axios.get("/web/login",query).then(
-        (res)=>{
+      this.$axios
+        .get("/web/login", query)
+        .then(res => {
+          this.$func.setCookie("blogUserInfo", res);
+          this.$store.dispatch("user/modifyUserInfo", res);
+
+          this.$axios
+            .get("/web/user/user")
+            .then(res => {
+              this.loginLoading = false;
+              this.$func.toast(
+                this.$createElement,
+                "success",
+                "提示",
+                "登录成功"
+              );
+              this.$func.setCookie("blogInfoDetail", res);
+              this.$store.dispatch("user/modifyUserInfoDetail", res);
+              this.$router.go(-1);
+            })
+            .catch(err => {
+              this.loginLoading = false;
+              this.$func.toast(this.$createElement, "error", "错误", err);
+            });
+        })
+        .catch(err => {
           this.loginLoading = false;
-          this.$func.toast(
-          this.$createElement,
-          "success",
-          "提示",
-          "登录成功")
-          this.$func.setCookie('blogUserInfo',res)
-          this.$store.dispatch("user/modifyUserInfo",res)
-          this.$router.go(-1)
-        }
-      ).catch(err=>{
-        this.loginLoading = false;
-        this.$func.toast(
-          this.$createElement,
-          "error",
-          "错误",
-          err)
-      })
+          this.$func.toast(this.$createElement, "error", "错误", err);
+        });
     }
   }
 };
@@ -601,8 +610,8 @@ export default {
     transform: translateX(0rem);
   }
 }
-.look-icon{
-  width:2rem;
+.look-icon {
+  width: 2rem;
   height: 2rem;
   cursor: pointer;
 }

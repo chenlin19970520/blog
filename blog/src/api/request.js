@@ -50,6 +50,7 @@ export default {
       let info = global.getCookie('blogUserInfo');
       options.headers.token = info?info.token:""
     }
-    return instance.delete(url, query, options);
+    options.params = query;
+    return instance.delete(url, options);
   },
 };

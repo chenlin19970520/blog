@@ -1,5 +1,5 @@
 <template>
-  <div class="home" >
+  <div class="home">
     <div class="header">
       <headerTop></headerTop>
       <div class="mt-1">
@@ -22,8 +22,8 @@ export default {
     labelHeader,
     articleList
   },
-  methods:{
-    load(){}
+  methods: {
+    load() {}
   }
 };
 </script>

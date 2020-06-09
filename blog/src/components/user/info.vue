@@ -29,15 +29,20 @@
       <div class="set-item">
         <div class="set-title">昵称</div>
         <div class="set-input">
-          <el-input v-model="editUser.nickname"></el-input>
+          <el-input
+            id="nicknameInput"
+            v-model="editUser.nickname"
+            @blur="inputBlur('nickname')"
+            @focus="inputFocus('nickname')"
+          ></el-input>
         </div>
         <div class="set-opeat">
-          <div class="opeat-row" v-if="!showEdit.nickname">
+          <div class="opeat-row" v-if="!showEdit.nickname" @click="setInputFocus('nickname')">
             <img class="ico" src="@/static/img/pen.png" alt />
             <span>修改</span>
           </div>
           <div class="opeat-row" v-if="showEdit.nickname">
-            <div class="save">保存</div>
+            <div class="save" @mousedown="saveEdit('nickname')">保存</div>
             <div class="cancel">取消</div>
           </div>
         </div>
@@ -45,15 +50,20 @@
       <div class="set-item">
         <div class="set-title">手机号</div>
         <div class="set-input">
-          <el-input v-model="editUser.phone"></el-input>
+          <el-input
+            id="phoneInput"
+            v-model="editUser.phone"
+            @blur="inputBlur('phone')"
+            @focus="inputFocus('phone')"
+          ></el-input>
         </div>
         <div class="set-opeat">
-          <div class="opeat-row" v-if="!showEdit.phone">
+          <div class="opeat-row" v-if="!showEdit.phone" @click="setInputFocus('phone')">
             <img class="ico" src="@/static/img/pen.png" alt />
             <span>修改</span>
           </div>
           <div class="opeat-row" v-if="showEdit.phone">
-            <div class="save">保存</div>
+            <div class="save" @mousedown="saveEdit('phone')">保存</div>
             <div class="cancel">取消</div>
           </div>
         </div>
@@ -61,15 +71,20 @@
       <div class="set-item">
         <div class="set-title">邮箱</div>
         <div class="set-input">
-          <el-input v-model="editUser.mailbox"></el-input>
+          <el-input
+            id="mailboxInput"
+            v-model="editUser.mailbox"
+            @blur="inputBlur('mailbox')"
+            @focus="inputFocus('mailbox')"
+          ></el-input>
         </div>
         <div class="set-opeat">
-          <div class="opeat-row" v-if="!showEdit.mailbox">
+          <div class="opeat-row" v-if="!showEdit.mailbox" @click="setInputFocus('mailbox')">
             <img class="ico" src="@/static/img/pen.png" alt />
             <span>修改</span>
           </div>
           <div class="opeat-row" v-if="showEdit.mailbox">
-            <div class="save">保存</div>
+            <div class="save" @mousedown="saveEdit('mailbox')">保存</div>
             <div class="cancel">取消</div>
           </div>
         </div>
@@ -85,24 +100,62 @@ export default {
       editUser: {}, //修改资料
       showEdit: {
         nickname: false,
-        mailbox:false,
-        phone:false
+        mailbox: false,
+        phone: false
       },
       uploadingAvatar: false //上传头像loading
     };
   },
   created() {
-    this.editUser = Object.assign(this.$store.state.user.infoDetail, this.$store.state.user.userInfo);
+    this.editUser = Object.assign({}, this.$store.state.user.infoDetail);
   },
   computed: {
     user() {
       return this.$store.state.user.userInfo;
     },
-    userDetail(){
-      return this.$store.state.user.infoDetail
+    userDetail() {
+      return this.$store.state.user.infoDetail;
     }
   },
   methods: {
+    /**
+     * @description:保存修改
+     */
+    saveEdit(key) {
+      console.log(key);
+      let query = {
+        ...this.userDetail
+      };
+      query[key] = this.editUser[key];
+      this.$axios.post("/web/user/modify", query).then(res => {
+        this.$func.toast(this.$createElement, "success", "提示", "修改成功");
+        this.$func.setCookie("blogInfoDetail", query);
+        this.$store.dispatch("user/modifyUserInfoDetail", query);
+      });
+    },
+    /**
+     * @description:点击修改
+     */
+    setInputFocus(k) {
+      let key = k + "Input";
+      let inputItem = document.getElementById(key);
+      inputItem.focus();
+      // inputItem.select();
+    },
+    /**
+     * @description:输入框失去焦点事件
+     */
+    inputBlur(key) {
+      this.showEdit[key] = false;
+      this.showEdit = Object.assign({}, this.showEdit);
+    },
+    /**
+     * @description:输入框获取焦点事件
+     */
+    inputFocus(key) {
+      this.showEdit[key] = true;
+      this.showEdit = Object.assign({}, this.showEdit);
+    },
     /**
      * @description:上传图片之前
      */
@@ -136,6 +189,7 @@ export default {
     handleAvatarSuccessAvatar(res, file) {
       this.editUser.avatar = res.data;
       this.uploadingAvatar = false;
+      this.saveEdit('avatar')
     }
   }
 };
