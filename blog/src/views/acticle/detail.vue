@@ -19,18 +19,21 @@
             </div>
             <div class="detail-title">{{detail.title}}</div>
             <div class="detail-content markdown-body" v-highlight v-html="detail.content"></div>
+            <div class="comment-box">
+              <comment></comment>
+            </div>
         </div>
-
     </div>
   </div>
 </template>
 
 <script>
 import headerTop from "@/components/header/header.vue";
-
+import comment from "@/components/article/comment.vue";
 export default {
   components: {
-    headerTop
+    headerTop,
+    comment
   },
   created(){
 
@@ -62,6 +65,9 @@ export default {
     background-color: white;
     border-radius: 2px;
     box-shadow: 0 0 1px 1px rgba(0,0,0,0.005);
+    .comment-box{
+      margin-top: 3rem;
+    }
     .detail-title{
         font-size: 26px;
         text-align: left;

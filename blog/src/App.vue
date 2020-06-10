@@ -53,6 +53,10 @@ body {
   background-color: #098FA4 !important;
   border-color: #098FA4 !important;
 }
+// /deep/.el-button--primary.is-disabled{
+//   background-color: rgba(9, 143, 167,0.5) !important;
+//   border-color: rgba(9, 143, 167,0.25) !important;
+// }
 .color-main{
   color:#098FA4;
 }
