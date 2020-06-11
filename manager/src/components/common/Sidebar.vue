@@ -112,10 +112,10 @@ export default {
                             index: 'articleLabel',
                             title: '文章标签'
                         },
-                        {
-                            index: 'articleComment',
-                            title: '评论'
-                        }
+                        // {
+                        //     index: 'articleComment',
+                        //     title: '评论'
+                        // }
                     ]
                 }
                 // {
