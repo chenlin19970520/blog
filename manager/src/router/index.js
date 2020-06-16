@@ -7,18 +7,13 @@ export default new Router({
     routes: [
         {
             path: '/',
-            redirect: '/dashboard'
+            redirect: '/userInfo'
         },
         {
             path: '/',
             component: () => import( '../components/common/Home.vue'),
             meta: { title: '自述文件' },
             children: [
-                {
-                    path: '/dashboard',
-                    component: () => import( '../components/views/index/home.vue'),
-                    meta: { title: '系统首页', name: '系统首页' }
-                },
                 {
                     path:"/administrator",
                     component:()=>import('../components/views/setting/admin.vue'),

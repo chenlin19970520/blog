@@ -73,12 +73,15 @@ export default {
      * @description:查看文章详情
      */
     lookItem(item){
-      sessionStorage.setItem("blog_article_detail",JSON.stringify(item));
+      // sessionStorage.setItem("blog_article_detail",JSON.stringify(item));
       // this.$router.push({
       //   path:"/articleDetail",
       // })
       let routeUrl = this.$router.resolve({
         path:"/articleDetail",
+        query:{
+          id:item.articleId
+        }
       })
       window.open(routeUrl.href,"_blank")
     },

@@ -186,10 +186,8 @@ export default {
     infoDetail() {
       return this.$store.state.user.infoDetail;
     },
-    detail() {
-      return sessionStorage.getItem("blog_article_detail")
-        ? JSON.parse(sessionStorage.getItem("blog_article_detail"))
-        : "";
+    articleId() {
+      return this.$route.query.id
     }
   },
   created() {
@@ -232,7 +230,7 @@ export default {
     secondSaveReplay(index, ix) {
       let item = this.commentList[index];
       let query = {
-        articleId: this.detail.articleId,
+        articleId: this.articleId,
         content: item.commentValue,
         toCommentId: item.id
       };
@@ -258,7 +256,7 @@ export default {
     saveReply(index) {
       let item = this.commentList[index];
       let query = {
-        articleId: this.detail.articleId,
+        articleId: this.articleId,
         content: item.commentValue,
         toCommentId: item.id
       };
@@ -283,7 +281,7 @@ export default {
      */
     saveComment(id) {
       let query = {
-        articleId: this.detail.articleId,
+        articleId: this.articleId,
         content: this.commentValue,
         toCommentId: id ? id : 0
         //   userId:infoDetail.userId
@@ -307,7 +305,7 @@ export default {
      */
     getCommentList() {
       let query = {
-        articleId: this.detail.articleId,
+        articleId: this.articleId,
         pageNum: this.pageNum,
         pageSize: 10
       };

@@ -8,57 +8,55 @@
             </el-breadcrumb>
         </div>
         <div class="container">
-            <div class="flex-row flex-between">
+            <!-- <div class="flex-row flex-between">
                 <div class="flex-row">
                     <el-input placeholder="角色名称" clearable v-model="search.name" class="mr-20"></el-input>
                     <el-button type="primary" @click="doSearch">搜索</el-button>
                 </div>
-                <div>
-                    <el-button type="primary" @click="showAddModel">创建</el-button>
-                </div>
-            </div>
-            <el-table class="mt-20" border v-loading="tableLoading" :data="tableList">
-                <el-table-column label="序号" align="center" width="50">
+            </div> -->
+            <el-table
+                class="mt-20"
+                border
+                v-loading="tableLoading"
+                :data="tableList"
+                row-key="id"
+                :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+            >
+                >
+                <el-table-column label="序号" align="center" width="80">
                     <template slot-scope="scope">{{scope.$index+1}}</template>
                 </el-table-column>
-                <el-table-column align="center"></el-table-column>
-                <el-table-column label="操作" align="center">
-                    <template slot-scope="scope">
-                        <el-button type="primary" @click="edit(scope.row)" class="mr-20">编辑</el-button>
-                        <el-popconfirm title="这是一段内容确定删除吗？" @onConfirm="delItem(scope.row)">
-                            <el-button slot="reference" type="danger">删除</el-button>
-                        </el-popconfirm>
-                    </template>
+                <el-table-column align="center" label="回复内容" prop="content"></el-table-column>
+                <el-table-column align="center" label="回复时间">
+                    <template slot-scope="scope">{{scope.row.createTime | createTime}}</template>
                 </el-table-column>
             </el-table>
-                        <div>
-                <Pagination :data="pageData" @currentChange="currentChange"/>
+            <div>
+                <Pagination :data="pageData" @currentChange="currentChange" />
             </div>
         </div>
-        <el-dialog title="添加角色" class="add-role-modal" :visible.sync="showAdd" width="25%">
-            <div>
-                <el-form label-width="80px" :model="addInfo" :rules="rules" ref="addInfo">
-                    <el-form-item label="角色名称" prop="name">
-                        <el-input placeholder="请输入角色名称" v-model="addInfo.name"></el-input>
-                    </el-form-item>
-                    <el-form-item label="备注" prop="note">
-                        <el-input placeholder="请输入备注" v-model="addInfo.note"></el-input>
-                    </el-form-item>
-                </el-form>
-            </div>
-            <div class="flex-end flex-row">
-                <el-button @click="showAddModel">取消</el-button>
-                <el-button type="primary" v-loading="saveLoading" @click="addItem">保存</el-button>
-            </div>
-        </el-dialog>
     </div>
 </template>
 
 <script>
-import Pagination from '@/components/common/Pagination.vue'
+import Pagination from '@/components/common/Pagination.vue';
 export default {
-    components:{
+    components: {
         Pagination
+    },
+    filters: {
+        createTime(time) {
+            let date = time ? new Date(time) : new Date();
+            let y = date.getFullYear();
+            let m = date.getMonth() + 1;
+            let d = date.getDate();
+            let h = date.getHours();
+            let mi = date.getMinutes();
+            let s = date.getSeconds();
+            let str = y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
+            str =  str + ' ' + (h < 10 ? '0' + h : h) + ':' + (mi < 10 ? '0' + mi : mi) + ':' + (s < 10 ? '0' + s : s);
+            return str;
+        }
     },
     data() {
         return {
@@ -85,18 +83,18 @@ export default {
             }
         };
     },
-    created(){
+    created() {
         this.getList();
     },
-    computed:{
-        articleId(){
-            return this.$route.query.id
+    computed: {
+        articleId() {
+            return this.$route.query.id;
         }
     },
-    watch:{
-        articleId(val){
-            if(val){
-                this.getList()
+    watch: {
+        articleId(val) {
+            if (val) {
+                this.getList();
             }
         }
     },
@@ -114,7 +112,7 @@ export default {
         getList() {
             let query = {
                 ...this.pageObject,
-                articleId:this.articleId,
+                articleId: this.articleId,
                 filers: this.func.doSearch(this.search)
             };
             this.tableLoading = true;
@@ -124,8 +122,13 @@ export default {
                 })
                 .then(res => {
                     this.tableLoading = false;
-                    this.tableList = res.data.content;
+
+                    this.tableList = res.data.content.map(it => {
+                        it.children = it.subs;
+                        return it;
+                    });
                     this.pageData = res.data;
+                    console.log(this.tableList);
                 })
                 .catch(err => {
                     this.tableLoading = false;
@@ -145,30 +148,7 @@ export default {
                       presenceStatus: 1
                   };
         },
-        /**
-         * @description:添加角色
-         */
-        addItem() {
-            this.$refs.addInfo.validate(valid => {
-                if (valid) {
-                    let query = {
-                        ...this.addInfo
-                    };
-                    this.saveLoading = true;
-                    this.axios
-                        .post('', query)
-                        .then(res => {
-                            this.saveLoading = false;
-                            this.$message.success(query.id ? '保存成功' : '添加成功');
-                            this.getList();
-                            this.showAddModel();
-                        })
-                        .catch(err => {
-                            this.saveLoading = false;
-                        });
-                }
-            });
-        },
+
         /**
          * @description:去编辑.
          */

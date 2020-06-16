@@ -57,7 +57,12 @@
                     </div>
                   </div>
                 </div>
-                <div class="article-more" v-if="articleList&&articleList.length" v-loading="moreLoading" @click="getMore">查看更多</div>
+                <div
+                  class="article-more"
+                  v-if="articleList&&articleList.length"
+                  v-loading="moreLoading"
+                  @click="getMore"
+                >查看更多</div>
               </el-tab-pane>
               <el-tab-pane label="动态" name="dynamic">无</el-tab-pane>
               <el-tab-pane label="赞 0" name="third">无</el-tab-pane>
@@ -101,9 +106,12 @@ export default {
      * @description:查看文章详情
      */
     lookItem(item) {
-      sessionStorage.setItem("blog_article_detail", JSON.stringify(item));
+      // sessionStorage.setItem("blog_article_detail", JSON.stringify(item));
       let routeUrl = this.$router.resolve({
-        path: "/articleDetail"
+        path: "/articleDetail",
+        query:{
+          id: item.articleId
+        }
       });
       window.open(routeUrl.href, "_blank");
     },

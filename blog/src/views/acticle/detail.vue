@@ -35,8 +35,16 @@ export default {
     headerTop,
     comment
   },
+  data(){
+    return{
+      articleId:"",
+      detail:""
+    }
+  },
   created(){
-
+  
+    this.articleId = this.$route.query.id
+    this.getArticleDetail()
   },
   destroyed(){
     sessionStorage.removeItem("blog_article_detail")
@@ -45,8 +53,17 @@ export default {
     userInfo() {
       return this.$store.state.user.userInfo;
     },
-    detail(){
-        return sessionStorage.getItem("blog_article_detail")?JSON.parse(sessionStorage.getItem("blog_article_detail")):'';
+  },
+  methods:{
+    getArticleDetail(){
+      let query = {
+        articleId:this.articleId
+      }
+      this.$axios.get("/web/home/articleDetail",query).then(
+        (res)=>{
+          this.detail = res
+        }
+      )
     }
   }
 };
