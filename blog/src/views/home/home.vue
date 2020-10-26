@@ -6,7 +6,7 @@
         <labelHeader></labelHeader>
       </div>
       <div class="list-box">
-        <articleList></articleList>
+          <articleList></articleList>
       </div>
     </div>
   </div>
@@ -16,15 +16,21 @@
 import headerTop from "@/components/header/header.vue";
 import labelHeader from "@/components/label/labelHeader.vue";
 import articleList from "@/components/article/list.vue";
+import zingtouch from "zingtouch";
+import test from "../../api/test.js";
 export default {
   components: {
     headerTop,
     labelHeader,
-    articleList
+    articleList,
   },
   methods: {
-    load() {}
-  }
+    load() {},
+  },
+  mounted() {
+    let t = test();
+    console.log(t);
+  },
 };
 </script>
 
@@ -35,5 +41,10 @@ export default {
 .list-box {
   background-color: #efefef;
   padding-top: 1.25rem;
+}
+.box {
+  width: 100px;
+  height: 100px;
+  background-color: rebeccapurple;
 }
 </style>

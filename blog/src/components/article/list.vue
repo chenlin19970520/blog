@@ -1,41 +1,50 @@
 <template>
-  <div class="article_list"  >
+  <div class="article_list">
     <div class="list-body">
       <div class="body-type">
         <div class="type-item type-active">热门</div>
         <div class="type-item">最新</div>
       </div>
-      <div class="body-detail" v-for="(item,index) in list" :key="index">
-        <div class="detail-item">
-          <div class="item-left">
-            <div class="item-info">
-              <div class="item-label">专栏</div>
-              <div class="item-name" >{{item.nickname}}</div>
-              <div class="item-time">{{item.creatTime|dateTime}}</div>
-              <div class="item-type">前端</div>
-            </div>
-            <div
-              class="item-title"
-              @click="lookItem(item)"
-            >{{item.title}}</div>
-            <div class="item-content">技术征文开启啦，快用你的面试经验换大奖 ~</div>
-            <div class="item-opreating">
-              <div class="opreat-box">
-                <div class="box-like">
-                  <img class="like" src="@/static/img/like.png" alt="">
-                  <span>11</span>
+      <div class="body-list">
+        <van-skeleton title :row="4" :loading="loading">
+          <div class="body-detail" v-for="(item, index) in list" :key="index">
+            <div class="detail-item">
+              <div class="item-left">
+                <div class="item-info">
+                  <div class="item-label">专栏</div>
+                  <div class="item-name">{{ item.nickname }}</div>
+                  <div class="item-time">{{ item.creatTime | dateTime }}</div>
+                  <div class="item-type">前端</div>
                 </div>
-                <div class="box-comment">
-                  <img class="comment" src="@/static/img/comment.png" alt="">
-                  <span>11</span>
+                <div class="item-title" @click="lookItem(item)">
+                  {{ item.title }}
                 </div>
+                <div class="item-content">
+                  技术征文开启啦，快用你的面试经验换大奖 ~
+                </div>
+                <div class="item-opreating">
+                  <div class="opreat-box">
+                    <div class="box-like">
+                      <img class="like" src="@/static/img/like.png" alt="" />
+                      <span>11</span>
+                    </div>
+                    <div class="box-comment">
+                      <img
+                        class="comment"
+                        src="@/static/img/comment.png"
+                        alt=""
+                      />
+                      <span>11</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="item-right">
+                <img src="@/static/img/login_bg.jpg" alt />
               </div>
             </div>
           </div>
-          <div class="item-right">
-            <img src="@/static/img/login_bg.jpg" alt />
-          </div>
-        </div>
+        </van-skeleton>
       </div>
     </div>
     <div class="list-other"></div>
@@ -43,88 +52,90 @@
 </template>
 
 <script>
+import { Skeleton } from "vant";
 export default {
-  data(){
-    return{
-      pageSize:20,
-      pageNum:0,
-      list:[],
-      getStatus:true,//获取数据是否可以
-    }
+  components: {
+    [Skeleton.name]: Skeleton,
   },
-  created(){
-    let that =this;
+  data() {
+    return {
+      pageSize: 20,
+      pageNum: 0,
+      list: [],
+      getStatus: true, //获取数据是否可以
+      loading: true,
+    };
+  },
+  created() {
+    let that = this;
     this.getArticleList();
-    window.addEventListener("scroll",function(e){
+    window.addEventListener("scroll", function (e) {
       let scroll = window.scrollY;
       let windowHeight = window.innerHeight;
       let allHeight = document.body.scrollHeight;
-      if(scroll+windowHeight>=allHeight-100){
-        that.pageNum = that.pageNum + 1;
+      if (scroll + windowHeight >= allHeight - 100) {
         that.getArticleList();
+      } else {
       }
-     else{
-       
-     }
-    })
+    });
   },
-  methods:{
+  methods: {
     /**
      * @description:查看文章详情
      */
-    lookItem(item){
+    lookItem(item) {
       // sessionStorage.setItem("blog_article_detail",JSON.stringify(item));
       // this.$router.push({
       //   path:"/articleDetail",
       // })
       let routeUrl = this.$router.resolve({
-        path:"/articleDetail",
-        query:{
-          id:item.articleId
-        }
-      })
-      window.open(routeUrl.href,"_blank")
+        path: "/articleDetail",
+        query: {
+          id: item.articleId,
+        },
+      });
+      window.open(routeUrl.href, "_blank");
     },
     /**
      * @description:获取文章列表
      * @author:chenlin
      * @time:2020-05-26
      */
-    getArticleList(){
-      if(!this.getStatus){
+    getArticleList() {
+      if (!this.getStatus) {
         return;
       }
       let query = {
-        pageNum:this.pageNum,
-        pageSize:this.pageSize,
-      }
-      this.getStatus =false;
-      this.$axios.get("/web/user/article",query).then(
-        (res)=>{
+        pageNum: this.pageNum,
+        pageSize: this.pageSize,
+      };
+      this.getStatus = false;
+      this.$axios
+        .get("/web/user/article", query)
+        .then((res) => {
+
           this.setStatus();
-          if(!res.content||!res.content.length){
-            this.pageNum = this.pageNum - 1;
-            
+          if (res.content && res.content.length) {
+            this.pageNum = this.pageNum + 1;
           }
-          let list = JSON.parse(JSON.stringify(
-            this.list
-          ))
+          let list = JSON.parse(JSON.stringify(this.list));
           list = list.concat(res.content);
-          this.list = list;          
-        }
-      ).catch(err=>{
-        this.setStatus();
-      })
+          this.list = list;
+        })
+        .catch((err) => {
+          this.setStatus();
+        });
     },
     /**
      * @desciprition:设置可以获取数据
      */
-    setStatus(){
-      setTimeout(()=>{
-        this.getStatus = true
-      },500)
-    }
-  }
+    setStatus() {
+      this.loading = false;
+      setTimeout(() => {
+        this.getStatus = true;
+      }, 500);
+    },
+  },
 };
 </script>
 <style lang="less" scoped>
@@ -137,6 +148,10 @@ export default {
     width: 75%;
     background-color: white;
     font-size: 14px;
+    .body-list{
+      padding:15px 0;
+      box-sizing: border-box;
+    }
     .body-detail {
       border-bottom: 1px solid rgba(0, 0, 0, 0.05);
       padding: 20px;
@@ -155,28 +170,29 @@ export default {
           white-space: nowrap;
           width: 100%;
         }
-        .item-content{
+        .item-content {
           font-size: 14px;
-           color: #b2bac2;
+          color: #b2bac2;
         }
-        .item-opreating{
-          margin-top: .7rem;
-          .opreat-box{
+        .item-opreating {
+          margin-top: 0.7rem;
+          .opreat-box {
             border: 1px solid #eee;
             border-radius: 2px;
             display: inline-flex;
             align-items: center;
             height: 24px;
-            img{
-               width: 1rem;
-                height: 1rem;
-                margin-right: 4px;
+            img {
+              width: 1rem;
+              height: 1rem;
+              margin-right: 4px;
             }
-            .box-like,.box-comment{
+            .box-like,
+            .box-comment {
               display: inline-flex;
               align-items: center;
               padding: 5px 7px;
-              color:#b2bac2 ;
+              color: #b2bac2;
             }
           }
         }
@@ -185,8 +201,8 @@ export default {
           line-height: 30px;
           font-weight: bold;
           margin-top: 5px;
-          &:hover{
-            color:rgba(9, 143, 167);
+          &:hover {
+            color: rgba(9, 143, 167);
             text-decoration: underline;
           }
         }
