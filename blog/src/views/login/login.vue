@@ -544,11 +544,12 @@ export default {
       }
       let query = {
         username: this.loginInfo.username,
-        password: md5(this.loginInfo.password)
+        password: md5(this.loginInfo.password),
+        type:1
       };
       this.loginLoading = true;
       this.$axios
-        .get("/web/login", query)
+        .get("/web/login/login", query)
         .then(res => {
           this.$func.setCookie("blogUserInfo", res);
           this.$store.dispatch("user/modifyUserInfo", res);

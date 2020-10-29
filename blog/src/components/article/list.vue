@@ -2,8 +2,8 @@
   <div class="article_list">
     <div class="list-body">
       <div class="body-type">
-        <div class="type-item type-active">热门</div>
-        <div class="type-item">最新</div>
+        <div class="type-item" :class="type=='NEWEST'?' type-active':''" @click="type='NEWEST'">热门</div>
+        <div class="type-item" :class="type=='POPULAR'?' type-active':''" @click="type='POPULAR'">最新</div>
       </div>
       <div class="body-list">
         <van-skeleton title :row="4" :loading="loading">
@@ -54,21 +54,36 @@
 <script>
 import { Skeleton } from "vant";
 export default {
+  props:['setting'],
   components: {
     [Skeleton.name]: Skeleton,
   },
   data() {
     return {
+      type:"POPULAR",/** POPULAR,NEWEST;最新,热门 */
       pageSize: 20,
       pageNum: 0,
       list: [],
+      url:"/web/user/article",
       getStatus: true, //获取数据是否可以
       loading: true,
     };
   },
+  watch:{
+    setting:{
+      handler(val){
+        this.url = val.url||this.url
+        this.getArticleList();
+      }, deep:true,immediate:true,
+    },
+    type(val){
+      this.pageNum = 0;
+      this.getArticleList();
+    }
+  },
   created() {
     let that = this;
-    this.getArticleList();
+    // this.getArticleList();
     window.addEventListener("scroll", function (e) {
       let scroll = window.scrollY;
       let windowHeight = window.innerHeight;
@@ -108,10 +123,12 @@ export default {
       let query = {
         pageNum: this.pageNum,
         pageSize: this.pageSize,
+        type:this.type
       };
       this.getStatus = false;
+     
       this.$axios
-        .get("/web/user/article", query)
+        .get(this.url, query)
         .then((res) => {
 
           this.setStatus();
@@ -257,6 +274,7 @@ export default {
       .type-item {
         margin-right: 30px;
         color: #999;
+        cursor: pointer;
         &:not(:last-of-type) {
           position: relative;
           &:after {

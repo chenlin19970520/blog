@@ -6,7 +6,7 @@
         <labelHeader></labelHeader>
       </div>
       <div class="list-box">
-          <articleList></articleList>
+          <articleList :setting="setting" ></articleList>
       </div>
     </div>
   </div>
@@ -23,6 +23,14 @@ export default {
     headerTop,
     labelHeader,
     articleList,
+  },
+  data(){
+    return{
+      setting:{
+        url:"/web/home/article",
+        filter:""
+      }
+    }
   },
   methods: {
     load() {},
