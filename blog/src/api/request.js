@@ -20,7 +20,7 @@ export default {
     }
     if(!options.headers.token){
       let info = global.getCookie('blogUserInfo');
-      options.headers.token = info?info.token:""
+      options.headers.appToken = info?info.token:""
     }
     return instance.get(url, options);
   },
@@ -34,7 +34,7 @@ export default {
     }
     if(!options.headers.token){
       let info = global.getCookie('blogUserInfo');
-      options.headers.token = info?info.token:""
+      options.headers.appToken = info?info.token:""
     }
     return instance.post(url, query, options);
   },
@@ -48,7 +48,7 @@ export default {
     }
     if(!options.headers.token){
       let info = global.getCookie('blogUserInfo');
-      options.headers.token = info?info.token:""
+      options.headers.appToken = info?info.token:""
     }
     options.params = query;
     return instance.delete(url, options);

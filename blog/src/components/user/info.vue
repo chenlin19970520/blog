@@ -89,6 +89,29 @@
           </div>
         </div>
       </div>
+
+       <div class="set-item">
+        <div class="set-title">职位</div>
+        <div class="set-input">
+          <el-input
+            id="positionInput"
+            v-model="editUser.position"
+            placeholder="请输入职位"
+            @blur="inputBlur('position')"
+            @focus="inputFocus('position')"
+          ></el-input>
+        </div>
+        <div class="set-opeat">
+          <div class="opeat-row" v-if="!showEdit.position" @click="setInputFocus('position')">
+            <img class="ico" src="@/static/img/pen.png" alt />
+            <span>修改</span>
+          </div>
+          <div class="opeat-row" v-if="showEdit.position">
+            <div class="save" @mousedown="saveEdit('position')">保存</div>
+            <div class="cancel">取消</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>

@@ -80,12 +80,12 @@
 
                 <el-table-column label="操作" align="center" width="250">
                     <template slot-scope="scope">
-                        <el-popconfirm :title="'确定'+(scope.row.status?'封禁':'解封')+'该用户吗？'" @onConfirm="ban(scope.row)">
+                        <el-popconfirm :title="'确定'+(DISABLEStatus[scope.row.status])+'该用户吗？'" @onConfirm="ban(scope.row)">
                             <el-button
                                 slot="reference"
                                 type="primary"
                                 class="mr-20"
-                            >{{scope.row.status?'封禁':"解封"}}</el-button>
+                            >{{DISABLEStatus[scope.row.status]}}</el-button>
                         </el-popconfirm>
                         <el-button
                             slot="reference"
@@ -256,6 +256,10 @@ export default {
             rules: {
                 name: [{ required: true, message: '请输入角色名', trigger: 'blur' }],
                 note: [{ required: true, message: '请输入备注', trigger: 'blur' }]
+            },
+            DISABLEStatus:{
+                DISABLE:"启用",
+                ENABLE:"禁用"
             }
         };
     },
@@ -314,7 +318,7 @@ export default {
             let query = {
                 ...item
             };
-            query.status = query.status == 1 ? 0 : 1;
+            query.status = query.status == "DISABLE" ? "ENABLE" : "DISABLE";
             this.tableLoading = true;
             this.axios.post('/manage/user/user', query).then(res => {
                 this.$message.success(query.status == 0 ? '封禁成功' : '解封成功');

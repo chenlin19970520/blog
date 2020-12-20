@@ -1,5 +1,5 @@
 
-let url = "http://bolg.longpeng.dev.cq1080.com/";
+let url = "http://192.168.10.174:8005";
 
 module.exports = {
   publicPath: "./",

@@ -3,15 +3,22 @@
     <div class="title">
       <el-input placeholder="输入文章标题..." v-model="articleTitle"></el-input>
       <div class="right-menu">
+        <div class="home" @click="goHome">
+          <span>首页</span>
+        </div>
         <div class="release" @click="showReleaseModal">
-          <span>{{articleId?'更新':'发布'}}</span>
+          <span>{{ articleId ? "更新" : "发布" }}</span>
           <img class="down-img" src="@/static/img/down.png" alt />
         </div>
         <div class="avatar">
           <el-avatar
             size="medium"
             type="primary"
-            :src="userInfo&&userInfo.avatar?userInfo.avatar:require('@/static/img/avatar_male.png')"
+            :src="
+              userInfo && userInfo.avatar
+                ? userInfo.avatar
+                : require('@/static/img/avatar_male.png')
+            "
           ></el-avatar>
         </div>
       </div>
@@ -21,11 +28,16 @@
       <div class="module">
         <div class="module-title">可见性</div>
         <div class="module-body">
-          <el-switch v-model="articleVisible" active-color="#999" inactive-color="#098FA4"></el-switch>
+          <el-switch
+            v-model="articleVisible"
+            active-color="#999"
+            inactive-color="#098FA4"
+          ></el-switch>
           <span
             class="switch-text"
-            :style="{color:articleVisible?'':'#098FA4'}"
-          >{{articleVisible?'公开':'私有'}}</span>
+            :style="{ color: articleVisible ? '' : '#098FA4' }"
+            >{{ articleVisible ? "公开" : "私有" }}</span
+          >
         </div>
       </div>
       <div class="module">
@@ -35,7 +47,12 @@
         </div>
       </div>
       <div class="module">
-        <el-button class="release-btn" @click="release" v-loading="releaseStatus">确定并发布</el-button>
+        <el-button
+          class="release-btn"
+          @click="release"
+          v-loading="releaseStatus"
+          >确定并发布</el-button
+        >
       </div>
     </div>
     <div id="editor">
@@ -49,33 +66,38 @@
 export default {
   data() {
     return {
-      articleId:"",//文章id,编辑时有
+      articleId: "", //文章id,编辑时有
       articleValue: "", //文章内容
       articleTitle: "", //文章标题
-      articleValueHtml:"",//html文章内容
+      articleValueHtml: "", //html文章内容
       articleVisible: true, //文章可见性，false，公开，true，私有
       releaseModal: false, //控制发布弹窗
-      releaseStatus: false //发布loading
+      releaseStatus: false, //发布loading
     };
   },
   created() {
-    let article = sessionStorage.getItem("blog_edit_article")?JSON.parse(sessionStorage.getItem('blog_edit_article')):''
-    console.log(JSON.parse(sessionStorage.getItem('blog_edit_article')))
-    if(article){
+    let article = sessionStorage.getItem("blog_edit_article")
+      ? JSON.parse(sessionStorage.getItem("blog_edit_article"))
+      : "";
+    console.log(JSON.parse(sessionStorage.getItem("blog_edit_article")));
+    if (article) {
       this.articleTitle = article.title;
       this.articleValue = article.content;
-      this.articleId = article.articleId
+      this.articleId = article.articleId;
     }
   },
   computed: {
     userInfo() {
       return this.$store.state.user.userInfo;
-    }
+    },
   },
-  destroyed(){
+  destroyed() {
     sessionStorage.removeItem("blog_edit_article");
   },
   methods: {
+    goHome() {
+      this.$router.push("/");
+    },
     /**
      * @description：获取html
      */
@@ -110,7 +132,7 @@ export default {
         label: "", //
         presenceStatus: 1, //新建
         title: this.articleTitle,
-        userId: this.userInfo.id
+        userId: this.userInfo.id,
       };
       if (!query.title) {
         this.$func.toast(
@@ -133,18 +155,18 @@ export default {
       this.releaseStatus = true;
       this.$axios
         .post("/web/user/article", query)
-        .then(res => {
+        .then((res) => {
           console.log(res);
           this.releaseStatus = false;
           this.$func.toast(this.$createElement, "success", "提示", "发布成功");
           this.$router.replace("/userCenter");
         })
-        .catch(err => {
+        .catch((err) => {
           this.loginLoading = false;
           this.$func.toast(this.$createElement, "error", "错误", err);
         });
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -236,6 +258,11 @@ export default {
       box-sizing: border-box;
       display: flex;
       align-items: center;
+      .home {
+        color: #098fa4;
+        cursor: pointer;
+        margin-right: 20px;
+      }
       .release {
         display: flex;
         align-items: center;

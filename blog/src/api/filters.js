@@ -12,7 +12,7 @@ const dateTime = (val)=>{
       var dayC = diffValue / day;
       var hourC = diffValue / hour;
       var minuteC = diffValue / minute;
-      if (parseInt(dayC) > 30) {
+      if (parseInt(dayC) > 3) {
         result = func.changeDate(val).subtring(0, 10);
       } else if (parseInt(dayC) > 1) {
         result = "" + parseInt(dayC) + "天前";

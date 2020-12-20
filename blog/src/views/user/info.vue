@@ -12,57 +12,103 @@
                 <img class="user-avatar" :src="userInfo.avatar" alt />
               </div>
               <div class>
-                <div class="user-nickName">{{userInfo.nickname}}</div>
-                <div>
-                  <img
-                    class="user-gender"
-                    :src="require('@/static/img/'+(userInfo.gender=='MALE'?'male.png':'female.png'))"
-                    alt
-                  />
+                <div class="flex-row" style="display: flex">
+                  <div class="user-nickName">{{ userInfo.nickname }}</div>
+                  <div>
+                    <img
+                      class="user-gender"
+                      :src="
+                        require('@/static/img/' +
+                          (userInfo.gender == 'MALE'
+                            ? 'male.png'
+                            : 'female.png'))
+                      "
+                      alt
+                    />
+                  </div>
                 </div>
                 <div class="user-work-box">
                   <img src="@/static/img/work.png" class="user-work" alt />
-                  <div class="user-work-text">前端工程师</div>
+                  <div
+                    class="user-work-text"
+                    :class="infoDetail.position ? '' : 'no-info'"
+                  >
+                    {{
+                      infoDetail.position
+                        ? infoDetail.position
+                        : "还未填写职位~"
+                    }}
+                  </div>
+                </div>
+                <div class="user-email-box">
+                  <img src="@/static/img/email.png" class="user-work" alt />
+                  {{ infoDetail.mailbox }}
                 </div>
               </div>
             </div>
             <div>
-              <el-button type="primary" @click="editUserInfo">编辑个人资料</el-button>
+              <el-button type="primary" @click="editUserInfo" size="small"
+                >编辑个人资料</el-button
+              >
             </div>
           </div>
 
           <div class="article-box">
             <el-tabs v-model="tabActive" @tab-click="handleClick">
-              <el-tab-pane :label="'文章 '+articleList.length" name="article">
+              <el-tab-pane :label="'文章 ' + articleList.length" name="article">
+                <van-skeleton title :row="4" :loading="loading">
                 <div class="article-list">
-                  <div class="article-item" v-for="(item,index) in articleList" :key="index">
+                  <div
+                    class="article-item"
+                    v-for="(item, index) in articleList"
+                    :key="index"
+                  >
                     <div class="item-info">
                       <img class="avatar" :src="userInfo.avatar" alt />
-                      <span class="name">{{userInfo.nickname}}</span>
+                      <span class="name">{{ userInfo.nickname }}</span>
                       <span class="pointer"></span>
-                      <span>{{userInfo.createTime | dateTime}}</span>
+                      <span>{{ item.createTime | dateTime }}</span>
                     </div>
-                    <div class="item-title" @click="lookItem(item)">{{item.title}}</div>
+                    <div class="item-title" @click="lookItem(item)">
+                      {{ item.title }}
+                    </div>
                     <div class="item-more">
-                      <div class="more-read">阅读&nbsp;{{item.reading?item.reading:0}}</div>
-                      <el-dropdown trigger="click" @command="handleCommand($event,item)">
+                      <div class="more-read">
+                        阅读&nbsp;{{ item.reading ? item.reading : 0 }}
+                      </div>
+                      <el-dropdown
+                        trigger="click"
+                        @command="handleCommand($event, item)"
+                      >
                         <div class="more-opeat">
-                          <img class="opeat-img" src="@/static/img/more.png" alt />
+                          <img
+                            class="opeat-img"
+                            src="@/static/img/more.png"
+                            alt
+                          />
                         </div>
                         <el-dropdown-menu slot="dropdown">
-                          <el-dropdown-item command="edit">编辑</el-dropdown-item>
-                          <el-dropdown-item command="delete">删除</el-dropdown-item>
+                          <el-dropdown-item command="edit"
+                            >编辑</el-dropdown-item
+                          >
+                          <el-dropdown-item command="delete"
+                            >删除</el-dropdown-item
+                          >
                         </el-dropdown-menu>
                       </el-dropdown>
                     </div>
                   </div>
                 </div>
+        </van-skeleton>
+
                 <div
                   class="article-more"
-                  v-if="articleList&&articleList.length"
+                  v-if="articleList && articleList.length > 10"
                   v-loading="moreLoading"
                   @click="getMore"
-                >查看更多</div>
+                >
+                  查看更多
+                </div>
               </el-tab-pane>
               <el-tab-pane label="动态" name="dynamic">无</el-tab-pane>
               <el-tab-pane label="赞 0" name="third">无</el-tab-pane>
@@ -77,25 +123,31 @@
 </template>
 
 <script>
+import { Skeleton } from "vant";
+
 import headerTop from "@/components/header/header.vue";
 export default {
   components: {
-    headerTop
+    headerTop,
+    [Skeleton.name]: Skeleton,
   },
   data() {
     return {
       tabActive: "article",
-
+      loading:true,
       pageNum: 0,
       pageSize: 20,
       articleList: [],
-      moreLoading: false //查看更多。
+      moreLoading: false, //查看更多。
     };
   },
   computed: {
     userInfo() {
       return this.$store.state.user.userInfo;
-    }
+    },
+    infoDetail() {
+      return this.$store.state.user.infoDetail;
+    },
   },
   created() {
     this.getArticleList();
@@ -109,9 +161,9 @@ export default {
       // sessionStorage.setItem("blog_article_detail", JSON.stringify(item));
       let routeUrl = this.$router.resolve({
         path: "/articleDetail",
-        query:{
-          id: item.articleId
-        }
+        query: {
+          id: item.articleId,
+        },
       });
       window.open(routeUrl.href, "_blank");
     },
@@ -119,7 +171,7 @@ export default {
      * @description:获取个人信息
      */
     getUserInfo() {
-      this.$axios.get("/web/user/user").then(res => {
+      this.$axios.get("/web/user/user").then((res) => {
         this.$func.setCookie("blogInfoDetail", res);
         this.$store.dispatch("user/modifyUserInfoDetail", res);
       });
@@ -143,13 +195,13 @@ export default {
         cancelButtonText: "取消",
         cancelButtonClass: "cancel-btn-primary",
         confirmButtonClass: "confirm-btn-primary",
-        type: "warning"
+        type: "warning",
       })
         .then(() => {
           let query = {
-            ids: item.articleId
+            ids: item.articleId,
           };
-          _this.$axios.delete("/web/user/article", query).then(res => {
+          _this.$axios.delete("/web/user/article", query).then((res) => {
             _this.$func.toast(
               _this.$createElement,
               "success",
@@ -180,9 +232,9 @@ export default {
     getArticleList(pageNum) {
       let query = {
         pageNum: pageNum ? pageNum : this.pageNum,
-        pageSize: this.pageSize
+        pageSize: this.pageSize,
       };
-      this.$axios.get("/web/user/article", query).then(res => {
+      this.$axios.get("/web/user/article", query).then((res) => {
         if (res && res.content && res.content.length) {
           this.pageNum = pageNum ? pageNum : this.pageNum;
         } else if (pageNum) {
@@ -193,9 +245,12 @@ export default {
             "没有更多数据了"
           );
         }
+        this.loading = false;
         this.moreLoading = false;
         this.articleList = this.articleList.concat(res.content);
-      });
+      }).catch(err=>[
+        this.loading = false
+      ])
     },
     /**
      * @description:获取下一页文章列表
@@ -211,8 +266,8 @@ export default {
     editUserInfo() {
       this.$router.push("/userEdit");
     },
-    handleClick(tab, event) {}
-  }
+    handleClick(tab, event) {},
+  },
 };
 </script>
 
@@ -254,11 +309,24 @@ export default {
           font-weight: bold;
           font-size: 26px;
           color: black;
+          margin-right: 10px;
         }
         .user-gender {
           width: 16px;
           height: 16px;
           margin-top: 10px;
+        }
+        .user-email-box {
+          margin-top: 10px;
+          display: flex;
+          align-items: center;
+          color: #333;
+          font-size: 14px;
+          .user-work {
+            width: 16px;
+            height: 16px;
+            margin-right: 10px;
+          }
         }
         .user-work-box {
           margin-top: 10px;
@@ -271,6 +339,9 @@ export default {
           .user-work-text {
             margin-left: 10px;
             font-size: 14px;
+          }
+          .user-work-text.no-info {
+            color: #bbb;
           }
         }
       }
@@ -295,7 +366,7 @@ export default {
         cursor: pointer;
       }
       .article-list {
-        min-height: 300px;
+        min-height: 100px;
 
         .article-item {
           padding: 2rem;

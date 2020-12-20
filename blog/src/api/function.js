@@ -52,5 +52,11 @@ const func = {
         })
         return current?JSON.parse(current.trim().substring(name.length+1)):""
     },
+    /**
+     * 检查路由
+     */
+    checkRouter(route,path){
+        return route.path == path?true:false
+    }
 }
 export default func

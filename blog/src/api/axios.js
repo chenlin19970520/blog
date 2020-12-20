@@ -26,6 +26,7 @@ http.interceptors.response.use(response => {
     func.deleteCookie("blogUserInfo")
     this.$router.replace("/")
     this.$store.dispatch("user/modifyUserInfo","")
+    return Promise.reject(msg);
   }else {
     return Promise.reject(msg);
   }

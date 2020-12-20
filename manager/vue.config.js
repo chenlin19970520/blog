@@ -1,4 +1,4 @@
-const url = 'http://bolg.longpeng.dev.cq1080.com/';
+const url = 'http://192.168.10.174:8005';
 // const url = '';
 
 module.exports = {

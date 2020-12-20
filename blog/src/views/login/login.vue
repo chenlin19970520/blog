@@ -7,18 +7,22 @@
           <div
             class="tab-item"
             @click="changeTab('phone')"
-            :class="tabActive=='phone'?'tab-active':''"
-          >手机号登录</div>
+            :class="tabActive == 'phone' ? 'tab-active' : ''"
+          >
+            手机号登录
+          </div>
           <div
             class="tab-item"
             @click="changeTab('password')"
-            :class="tabActive=='password'?'tab-active':''"
-          >密码登录</div>
+            :class="tabActive == 'password' ? 'tab-active' : ''"
+          >
+            密码登录
+          </div>
         </div>
         <div
           class="input-line"
-          v-if="tabActive=='phone'"
-          :class="className.indexOf('username')!=-1?'active':''"
+          v-if="tabActive == 'phone'"
+          :class="className.indexOf('username') != -1 ? 'active' : ''"
         >
           <el-input
             placeholder="请输入手机号"
@@ -33,8 +37,8 @@
         </div>
         <div
           class="input-line"
-          v-if="tabActive!='phone'"
-          :class="className.indexOf('username')!=-1?'active':''"
+          v-if="tabActive != 'phone'"
+          :class="className.indexOf('username') != -1 ? 'active' : ''"
         >
           <el-input
             placeholder="请输入用户名"
@@ -49,15 +53,15 @@
         </div>
         <div
           class="input-line"
-          v-if="tabActive!='phone'"
-          :class="className.indexOf('password')!=-1?'active':''"
+          v-if="tabActive != 'phone'"
+          :class="className.indexOf('password') != -1 ? 'active' : ''"
         >
           <div class="flex-row">
             <el-input
               class="flex-one"
               placeholder="请输入密码"
               clearable
-              :type="lookCode?'text':'password'"
+              :type="lookCode ? 'text' : 'password'"
               @focus="addClass('password')"
               v-model="loginInfo.password"
               @keyup.enter.native="login"
@@ -66,8 +70,12 @@
 
             <img
               class="look-icon"
-              @click="lookCode=!lookCode"
-              :src="lookCode?require('@/static/img/eye-close.png'):require('@/static/img/eye-open.png')"
+              @click="lookCode = !lookCode"
+              :src="
+                lookCode
+                  ? require('@/static/img/eye-close.png')
+                  : require('@/static/img/eye-open.png')
+              "
               alt
             />
           </div>
@@ -82,15 +90,17 @@
             v-loading="loginLoading"
             @click="login"
             type="primary"
-          >登录</el-button>
+            >登录</el-button
+          >
         </div>
         <div class="input-line">
           <el-button
             class="login-btn"
             v-loading="loginLoading"
             type="primary"
-            @click="isRegister=true,isLogin=false"
-          >没有账号？去注册</el-button>
+            @click="(isRegister = true), (isLogin = false)"
+            >没有账号？去注册</el-button
+          >
         </div>
         <div class="input-line">
           <div class="other-login flex-row flex-between">
@@ -102,6 +112,116 @@
       <div class="register-modal" v-if="isRegister">
         <div class="split-line"></div>
         <div class="flex-row flex-between">
+                    <div class="w-45">
+            <div class="input-line">
+              <div class="register-avatar">
+                <el-upload
+                  class="avatar-uploader"
+                  action="/other/uploadFile"
+                  :data="{
+                    type: 1,
+                  }"
+                  v-loading="upload.avatar"
+                  :show-file-list="false"
+                  :on-success="handleAvatarSuccessAvatar"
+                  :before-upload="beforeAvatarUploadAvatar"
+                >
+                  <img
+                    v-if="registerInfo.avatar"
+                    :src="'/' + registerInfo.avatar"
+                    alt
+                  />
+                  <img v-else src="@/static/img/avatar_famale.png" alt />
+                  <div class="text">点击上传用户头像</div>
+                </el-upload>
+              </div>
+            </div>
+            <div class="mt-2"></div>
+            <div
+              class="input-line"
+              :class="
+                registerClassName.indexOf('nickname') != -1 ? 'active' : ''
+              "
+            >
+              <el-input
+                placeholder="请输入昵称"
+                @focus="addRegisterClass('nickname')"
+                clearable
+                v-model="registerInfo.nickname"
+                @blur="addRegisterClass('nickname')"
+              ></el-input>
+              <div class="bottom-line">
+                <div class="active-line"></div>
+              </div>
+            </div>
+            <div
+              class="input-line"
+              :class="
+                registerClassName.indexOf('username') != -1 ? 'active' : ''
+              "
+            >
+              <el-input
+                placeholder="请输入用户名"
+                @focus="addRegisterClass('username')"
+                clearable
+                v-model="registerInfo.username"
+                @blur="addRegisterClass('username')"
+              ></el-input>
+              <div class="bottom-line">
+                <div class="active-line"></div>
+              </div>
+            </div>
+            <div
+              class="input-line"
+              :class="
+                registerClassName.indexOf('password') != -1 ? 'active' : ''
+              "
+            >
+              <el-input
+                placeholder="请输入登录密码"
+                @focus="addRegisterClass('password')"
+                clearable
+                type="password"
+                v-model="registerInfo.password"
+                @blur="addRegisterClass('password')"
+              ></el-input>
+              <div class="bottom-line">
+                <div class="active-line"></div>
+              </div>
+            </div>
+            <div
+              class="input-line"
+              :class="registerClassName.indexOf('phone') != -1 ? 'active' : ''"
+            >
+              <el-input
+                placeholder="请输入手机号"
+                @focus="addRegisterClass('phone')"
+                clearable
+                v-model="registerInfo.phone"
+                @blur="addRegisterClass('phone')"
+              ></el-input>
+              <div class="bottom-line">
+                <div class="active-line"></div>
+              </div>
+            </div>
+            <div
+              class="input-line"
+              :class="
+                registerClassName.indexOf('mailbox') != -1 ? 'active' : ''
+              "
+            >
+              <el-input
+                placeholder="请输入邮箱"
+                @focus="addRegisterClass('mailbox')"
+                clearable
+                v-model="registerInfo.mailbox"
+                @blur="addRegisterClass('mailbox')"
+              ></el-input>
+              <div class="bottom-line">
+                <div class="active-line"></div>
+              </div>
+            </div>
+          </div>
           <div class="w-45">
             <div class="input-line">
               <div class="register-avatar">
@@ -109,7 +229,7 @@
                   class="avatar-uploader"
                   action="/other/uploadFile"
                   :data="{
-                    type:1
+                    type: 1,
                   }"
                   v-loading="upload.face"
                   :show-file-list="false"
@@ -117,7 +237,11 @@
                   :before-upload="beforeAvatarUploadFace"
                 >
                   <img
-                    :src="registerInfo.face?'/'+registerInfo.face:require('@/static/img/avatar_male.png')"
+                    :src="
+                      registerInfo.face
+                        ? '/' + registerInfo.face
+                        : require('@/static/img/avatar_male.png')
+                    "
                     alt
                   />
                   <div class="text">点击上传本人照片</div>
@@ -127,7 +251,9 @@
             <div class="mt-2"></div>
             <div
               class="input-line"
-              :class="registerClassName.indexOf('actualName')!=-1?'active':''"
+              :class="
+                registerClassName.indexOf('actualName') != -1 ? 'active' : ''
+              "
             >
               <el-input
                 placeholder="请输入真实姓名"
@@ -140,7 +266,12 @@
                 <div class="active-line"></div>
               </div>
             </div>
-            <div class="input-line" :class="registerClassName.indexOf('idNumber')!=-1?'active':''">
+            <div
+              class="input-line"
+              :class="
+                registerClassName.indexOf('idNumber') != -1 ? 'active' : ''
+              "
+            >
               <el-input
                 placeholder="请输入身份证号"
                 @focus="addRegisterClass('idNumber')"
@@ -152,7 +283,10 @@
                 <div class="active-line"></div>
               </div>
             </div>
-            <div class="input-line" :class="registerClassName.indexOf('gender')!=-1?'active':''">
+            <div
+              class="input-line"
+              :class="registerClassName.indexOf('gender') != -1 ? 'active' : ''"
+            >
               <el-select
                 placeholder="请选择性别"
                 clearable
@@ -161,7 +295,7 @@
                 @blur="addRegisterClass('gender')"
               >
                 <el-option
-                  v-for="(item,index) in sexList"
+                  v-for="(item, index) in sexList"
                   :key="index"
                   :label="item.name"
                   :value="item.key"
@@ -171,7 +305,12 @@
                 <div class="active-line"></div>
               </div>
             </div>
-            <div class="input-line" :class="registerClassName.indexOf('birthday')!=-1?'active':''">
+            <div
+              class="input-line"
+              :class="
+                registerClassName.indexOf('birthday') != -1 ? 'active' : ''
+              "
+            >
               <el-date-picker
                 v-model="registerInfo.birthday"
                 placeholder="请选择出生日期"
@@ -192,7 +331,7 @@
                   class="avatar-uploader"
                   action="/other/uploadFile"
                   :data="{
-                    type:1
+                    type: 1,
                   }"
                   v-loading="upload.idNumberPhoto"
                   :show-file-list="false"
@@ -201,7 +340,8 @@
                 >
                   <img
                     v-if="registerInfo.idNumberPhoto"
-                    :src="'/'+registerInfo.idNumberPhoto"
+                    :src="'/' + registerInfo.idNumberPhoto"
+                    style="object-fit:cover"
                     class="avatar"
                   />
                   <div v-else class="idcard-text">
@@ -212,100 +352,24 @@
               </div>
             </div>
           </div>
-          <div class="w-45">
-            <div class="input-line">
-              <div class="register-avatar">
-                <el-upload
-                  class="avatar-uploader"
-                  action="/other/uploadFile"
-                  :data="{
-                    type:1
-                  }"
-                  v-loading="upload.avatar"
-                  :show-file-list="false"
-                  :on-success="handleAvatarSuccessAvatar"
-                  :before-upload="beforeAvatarUploadAvatar"
-                >
-                  <img v-if="registerInfo.avatar" :src="'/'+registerInfo.avatar" alt />
-                  <img v-else src="@/static/img/avatar_famale.png" alt />
-                  <div class="text">点击上传用户头像</div>
-                </el-upload>
-              </div>
-            </div>
-            <div class="mt-2"></div>
-            <div class="input-line" :class="registerClassName.indexOf('nickname')!=-1?'active':''">
-              <el-input
-                placeholder="请输入昵称"
-                @focus="addRegisterClass('nickname')"
-                clearable
-                v-model="registerInfo.nickname"
-                @blur="addRegisterClass('nickname')"
-              ></el-input>
-              <div class="bottom-line">
-                <div class="active-line"></div>
-              </div>
-            </div>
-            <div class="input-line" :class="registerClassName.indexOf('username')!=-1?'active':''">
-              <el-input
-                placeholder="请输入用户名"
-                @focus="addRegisterClass('username')"
-                clearable
-                v-model="registerInfo.username"
-                @blur="addRegisterClass('username')"
-              ></el-input>
-              <div class="bottom-line">
-                <div class="active-line"></div>
-              </div>
-            </div>
-            <div class="input-line" :class="registerClassName.indexOf('password')!=-1?'active':''">
-              <el-input
-                placeholder="请输入登录密码"
-                @focus="addRegisterClass('password')"
-                clearable
-                v-model="registerInfo.password"
-                @blur="addRegisterClass('password')"
-              ></el-input>
-              <div class="bottom-line">
-                <div class="active-line"></div>
-              </div>
-            </div>
-            <div class="input-line" :class="registerClassName.indexOf('phone')!=-1?'active':''">
-              <el-input
-                placeholder="请输入手机号"
-                @focus="addRegisterClass('phone')"
-                clearable
-                v-model="registerInfo.phone"
-                @blur="addRegisterClass('phone')"
-              ></el-input>
-              <div class="bottom-line">
-                <div class="active-line"></div>
-              </div>
-            </div>
-            <div class="input-line" :class="registerClassName.indexOf('mailbox')!=-1?'active':''">
-              <el-input
-                placeholder="请输入邮箱"
-                @focus="addRegisterClass('mailbox')"
-                clearable
-                v-model="registerInfo.mailbox"
-                @blur="addRegisterClass('mailbox')"
-              ></el-input>
-              <div class="bottom-line">
-                <div class="active-line"></div>
-              </div>
-            </div>
-          </div>
         </div>
         <div class="mt-2"></div>
         <div class="input-line flex-row flex-center">
           <div class="register-btn">
-            <el-button class="login-btn" @click="register" v-loading="registerLoading">保存信息并注册</el-button>
+            <el-button
+              class="login-btn"
+              @click="register"
+              v-loading="registerLoading"
+              >保存信息并注册</el-button
+            >
           </div>
           <div class="register-btn">
             <el-button
               class="login-btn"
               v-loading="registerLoading"
-              @click="isLogin=true,isRegister=false"
-            >已有账号？去登录</el-button>
+              @click="(isLogin = true), (isRegister = false)"
+              >已有账号？去登录</el-button
+            >
           </div>
         </div>
       </div>
@@ -331,27 +395,27 @@ export default {
         phone: "", //手机号,
         mailbox: "", //邮箱,
         idNumber: "", //身份证号
-        idNumberPhoto: "" //身份证照片
+        idNumberPhoto: "", //身份证照片
       },
       lookCode: false,
       upload: {
         avatar: false,
         face: false,
-        idNumberPhoto: false
+        idNumberPhoto: false,
       },
       sexList: [
         {
           name: "男",
-          key: "MALE"
+          key: "MALE",
         },
         {
           name: "女",
-          key: "FEMALE"
-        }
+          key: "FEMALE",
+        },
       ],
       loginInfo: {
         username: "",
-        password: ""
+        password: "",
       }, //登录信息
       isLogin: true, //是否是登录
       isRegister: false, //是否是注册
@@ -359,7 +423,7 @@ export default {
       registerLoading: false, //注册loading
       tabActive: "password", //登录方式
       className: "", //input框选中
-      registerClassName: "" //注册框
+      registerClassName: "", //注册框
     };
   },
   methods: {
@@ -508,12 +572,12 @@ export default {
         return;
       }
       let query = {
-        ...this.registerInfo
+        ...this.registerInfo,
       };
       this.registerLoading = true;
       this.$axios
-        .post("/web/registered", query)
-        .then(res => {
+        .post("/web/login/registered", query)
+        .then((res) => {
           this.registerLoading = false;
           this.$func.toast(
             this.$createElement,
@@ -524,7 +588,7 @@ export default {
           this.isRegister = false;
           this.isLogin = true;
         })
-        .catch(err => {
+        .catch((err) => {
           this.registerLoading = false;
           this.$func.toast(this.$createElement, "error", "错误", err);
         });
@@ -545,18 +609,18 @@ export default {
       let query = {
         username: this.loginInfo.username,
         password: md5(this.loginInfo.password),
-        type:1
+        type: 1,
       };
       this.loginLoading = true;
       this.$axios
         .get("/web/login/login", query)
-        .then(res => {
+        .then((res) => {
           this.$func.setCookie("blogUserInfo", res);
           this.$store.dispatch("user/modifyUserInfo", res);
 
           this.$axios
             .get("/web/user/user")
-            .then(res => {
+            .then((res) => {
               this.loginLoading = false;
               this.$func.toast(
                 this.$createElement,
@@ -568,17 +632,17 @@ export default {
               this.$store.dispatch("user/modifyUserInfoDetail", res);
               this.$router.go(-1);
             })
-            .catch(err => {
+            .catch((err) => {
               this.loginLoading = false;
               this.$func.toast(this.$createElement, "error", "错误", err);
             });
         })
-        .catch(err => {
+        .catch((err) => {
           this.loginLoading = false;
           this.$func.toast(this.$createElement, "error", "错误", err);
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

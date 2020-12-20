@@ -2,8 +2,20 @@
   <div class="article_list">
     <div class="list-body">
       <div class="body-type">
-        <div class="type-item" :class="type=='NEWEST'?' type-active':''" @click="type='NEWEST'">热门</div>
-        <div class="type-item" :class="type=='POPULAR'?' type-active':''" @click="type='POPULAR'">最新</div>
+        <div
+          class="type-item"
+          :class="type == 'NEWEST' ? ' type-active' : ''"
+          @click="type = 'NEWEST'"
+        >
+          热门
+        </div>
+        <div
+          class="type-item"
+          :class="type == 'POPULAR' ? ' type-active' : ''"
+          @click="type = 'POPULAR'"
+        >
+          最新
+        </div>
       </div>
       <div class="body-list">
         <van-skeleton title :row="4" :loading="loading">
@@ -24,9 +36,9 @@
                 </div>
                 <div class="item-opreating">
                   <div class="opreat-box">
-                    <div class="box-like">
+                    <div class="box-like" @click="like(item,index)">
                       <img class="like" src="@/static/img/like.png" alt="" />
-                      <span>11</span>
+                      <span style="font-size:12px">{{item.articleLikeNumber}}</span>
                     </div>
                     <div class="box-comment">
                       <img
@@ -54,32 +66,34 @@
 <script>
 import { Skeleton } from "vant";
 export default {
-  props:['setting'],
+  props: ["setting"],
   components: {
     [Skeleton.name]: Skeleton,
   },
   data() {
     return {
-      type:"POPULAR",/** POPULAR,NEWEST;最新,热门 */
+      type: "POPULAR" /** POPULAR,NEWEST;最新,热门 */,
       pageSize: 20,
       pageNum: 0,
       list: [],
-      url:"/web/user/article",
+      url: "/web/user/article",
       getStatus: true, //获取数据是否可以
       loading: true,
     };
   },
-  watch:{
-    setting:{
-      handler(val){
-        this.url = val.url||this.url
+  watch: {
+    setting: {
+      handler(val) {
+        this.url = val.url || this.url;
         this.getArticleList();
-      }, deep:true,immediate:true,
+      },
+      deep: true,
+      immediate: true,
     },
-    type(val){
+    type(val) {
       this.pageNum = 0;
       this.getArticleList();
-    }
+    },
   },
   created() {
     let that = this;
@@ -112,6 +126,18 @@ export default {
       window.open(routeUrl.href, "_blank");
     },
     /**
+     * @description:点赞文章
+     */
+    like(item,index){
+      this.$axios.get("/web/home/articleLike",{
+        articleId:item.articleId
+      }).then(res=>{
+        this.$func.toast(this.$createElement, "success", "提示", res)
+        this.list[index].articleLikeNumber++;
+        // this.list[index].articleLikeNumber
+      })
+    },
+    /**
      * @description:获取文章列表
      * @author:chenlin
      * @time:2020-05-26
@@ -123,14 +149,13 @@ export default {
       let query = {
         pageNum: this.pageNum,
         pageSize: this.pageSize,
-        type:this.type
+        type: this.type,
       };
       this.getStatus = false;
-     
+
       this.$axios
         .get(this.url, query)
         .then((res) => {
-
           this.setStatus();
           if (res.content && res.content.length) {
             this.pageNum = this.pageNum + 1;
@@ -165,8 +190,8 @@ export default {
     width: 75%;
     background-color: white;
     font-size: 14px;
-    .body-list{
-      padding:15px 0;
+    .body-list {
+      padding: 15px 0;
       box-sizing: border-box;
     }
     .body-detail {
